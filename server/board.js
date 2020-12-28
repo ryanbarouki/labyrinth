@@ -15,7 +15,7 @@ let Board = function () {
         ShiftRowLeft: ShiftRowLeft,
         ShiftRowRight: ShiftRowRight,
         playerList: {},
-        numberOfPlayers:-1,
+        numberOfPlayers:0,
     };
     return self;
 }

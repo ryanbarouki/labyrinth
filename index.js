@@ -44,23 +44,42 @@ io.sockets.on('connection', client => {
         client.emit('gameCode', roomName);
         gameRooms[roomName] = new Board();
         client.join(roomName);
-        let player = Player(client.id, 0, 0);
+        let player = createNewPlayer(roomName);
         gameRooms[roomName].playerList[client.id] = player;
         startGameInterval(roomName);
     }
 
     function handleJoinGame(roomName) {
-        const room = io.sockets.adapter.rooms[roomName];
+        const room = io.sockets.adapter.rooms.get(roomName);
+        
+        let numClients = 0;
+        if (room) {
+            numClients = room.size;
+        }
 
+        if (numClients === 0) {
+            client.emit('unknownCode');
+            return;
+        } else if (numClients > 3) {
+            client.emit('gameFull');
+            return;
+        }
         clientRooms[client.id] = roomName;
 
         client.join(roomName);
         client.emit('gameCode', roomName);
-        let player = Player(client.id, 6, 0);
+        let player = createNewPlayer(roomName);
         gameRooms[roomName].playerList[client.id] = player;
         startGameInterval(roomName);
     }
     
+    function createNewPlayer(room) {
+        let num = gameRooms[room].numberOfPlayers;
+        const x = startingPos[num][0];
+        const y = startingPos[num][1];
+        gameRooms[room].numberOfPlayers++;
+        return new Player(client.id, x, y);
+    }
     // updating the board
     client.on('colShiftDown', col => {
         const roomName = clientRooms[client.id];
@@ -117,10 +136,6 @@ function startGameInterval(roomName) {
             })
         }
         boardPack = gameRooms[roomName];
-        // for (let i in SOCKET_LIST){
-        //     let socket = SOCKET_LIST[i];
-        //     socket.emit('newPositions', {playerPack, boardPack});
-        // }
         io.sockets.in(roomName).emit('newPositions', {playerPack, boardPack});
     }, 1000/25);
 }

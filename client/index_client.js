@@ -9,7 +9,18 @@ socket.on('gameCode', roomName => {
     gameCode = roomName;
     console.log(gameCode);
     gameCodeDisplay.innerText = gameCode;
+    startGame = true;
+    init();
 });
+
+socket.on('unknownCode', () => {
+    alert("That code doesn't exist!");
+    startGame = false;
+})
+
+socket.on('gameFull', () => {
+    alert("There are already 4 players in this game :(");
+})
 
 socket.on('newPositions', package => {
     if (startGame){
@@ -38,9 +49,7 @@ function newGame() {
 
 function joinGame() {
     const code = gameCodeInput.value;
-    startGame = true;
     socket.emit('joinGame', code);
-    init();
 }
 
 function init() {
@@ -51,6 +60,7 @@ function init() {
 let down = false;
 document.addEventListener('keydown', e => {
     if (down) return;
+    if (!startGame) return;
     down = true;
     if (e.key == "w")
         socket.emit('keyPress', {inputId:'up', state:true});
@@ -64,6 +74,7 @@ document.addEventListener('keydown', e => {
 
 document.addEventListener('keyup', e => {
     down = false;
+    if (!startGame) return;
     if (e.key == "w")
         socket.emit('keyRelease', {inputId:'up', state:false});
     else if (e.key == "a")
