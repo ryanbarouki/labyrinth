@@ -125,5 +125,5 @@ function startGameInterval(roomName) {
         }
         boardPack = gameRooms[roomName];
         io.sockets.in(roomName).emit('newPositions', {playerPack, boardPack});
-    }, 1000/12);
+    }, 1000/30);
 }
