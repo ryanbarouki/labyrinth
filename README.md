@@ -3,8 +3,7 @@ An online version of the popular board game Labyrinth
 
 # TODO
 - tile rotations
-- multiple game sessions with sign in
-- restrict to 4 players max
 - cards of target treasure
 - random starting configuration
 - host on heroku
+- BUG: when player 1 leaves - player 2 becomes player 1.

@@ -14,8 +14,7 @@ let Board = function () {
         ShiftColUp: ShiftColUp,
         ShiftRowLeft: ShiftRowLeft,
         ShiftRowRight: ShiftRowRight,
-        playerList: {},
-        numberOfPlayers:0,
+        playerList: {}
     };
     return self;
 }

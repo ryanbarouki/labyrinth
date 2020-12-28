@@ -19,7 +19,6 @@ serv.listen(PORT, () => {
 //let gameBoard = new Board();
 let SOCKET_LIST = {};
 const startingPos = [[0,0], [6,0], [6,6], [0,6]]
-let numberOfPlayers = -1;
 const clientRooms = {};
 const gameRooms = {};
 
@@ -27,13 +26,6 @@ const io = require('socket.io')(serv,{});
 io.sockets.on('connection', client => {
     console.log('socket connection');
     SOCKET_LIST[client.id] = client;
-    numberOfPlayers++;
-    // // create player and add to player list
-    // const x = startingPos[numberOfPlayers][0];
-    // const y = startingPos[numberOfPlayers][1];
-    // let player = Player(socket.id, x, y);
-    
-    // gameBoard.playerList[socket.id] = player;
     
     client.on('newGame', handleNewGame);
     client.on('joinGame', handleJoinGame);
@@ -44,8 +36,7 @@ io.sockets.on('connection', client => {
         client.emit('gameCode', roomName);
         gameRooms[roomName] = new Board();
         client.join(roomName);
-        let player = createNewPlayer(roomName);
-        gameRooms[roomName].playerList[client.id] = player;
+        createNewPlayer(roomName);
         startGameInterval(roomName);
     }
 
@@ -68,17 +59,15 @@ io.sockets.on('connection', client => {
 
         client.join(roomName);
         client.emit('gameCode', roomName);
-        let player = createNewPlayer(roomName);
-        gameRooms[roomName].playerList[client.id] = player;
+        createNewPlayer(roomName);
         startGameInterval(roomName);
     }
     
     function createNewPlayer(room) {
-        let num = gameRooms[room].numberOfPlayers;
+        let num = gameRooms[room].playerList != {} ? Object.keys(gameRooms[room].playerList).length : 0;
         const x = startingPos[num][0];
         const y = startingPos[num][1];
-        gameRooms[room].numberOfPlayers++;
-        return new Player(client.id, x, y);
+        gameRooms[room].playerList[client.id] = new Player(client.id, x, y);
     }
     // updating the board
     client.on('colShiftDown', col => {
@@ -120,7 +109,6 @@ io.sockets.on('connection', client => {
             // want to delete the room when the host player has left
             delete gameRooms[roomName].playerList[client.id];
         }
-        numberOfPlayers--;
     });
 
 }); 
