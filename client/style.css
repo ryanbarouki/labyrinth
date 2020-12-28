@@ -11,6 +11,10 @@ main {
     background-color: rgb(0, 50, 90);
 }
 
+body {
+    background-color: rgb(0, 50, 90);
+}
+
 td {
     position: relative;
     width: 80px;
@@ -21,9 +25,18 @@ td {
 h1 {
     color: #fff;
     font-family: Helvetica;
+    text-align: center;
 }
-/* .fixed {
-    background-color: #0d1431
+
+p {
+    color:#fff;
+    margin-top: 1rem;
+    font-size: large;
+}
+/* img {
+    vertical-align: middle;
+    text-align: center;
+    border-style: none;
 } */
 
 .outercol {
@@ -71,6 +84,16 @@ h1 {
     border-radius: 10%;
 }
 
+#gameScreen {
+    display: none;
+}
+
+#logo {
+    height:10rem;
+    width: auto;
+    margin: auto;
+    display: block;
+}
 #player-1 {
     z-index:110;
     margin: auto;

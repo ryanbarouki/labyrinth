@@ -2,17 +2,51 @@ const socket = io();
 let board;
 let sparePiece = 49;
 let players = [];
+let gameCode;
+let startGame = false;
+
+socket.on('gameCode', roomName => {
+    gameCode = roomName;
+    console.log(gameCode);
+    gameCodeDisplay.innerText = gameCode;
+});
 
 socket.on('newPositions', package => {
-    for (let i in package.playerPack){
-
+    if (startGame){
+        players = package.playerPack;
+        board = package.boardPack.board;
+        sparePiece = package.boardPack.sparePiece;
+        UpdateBoard();
     }
-    players = package.playerPack;
-    board = package.boardPack.board;
-    sparePiece = package.boardPack.sparePiece;
-    UpdateBoard();
-} );
+});
 
+const gameScreen = document.getElementById('gameScreen');
+const initialScreen = document.getElementById('initialScreen');
+const newGameBtn = document.getElementById('newGameButton');
+const joinGameBtn = document.getElementById('joinGameButton');
+const gameCodeInput = document.getElementById('gameCodeInput');
+const gameCodeDisplay = document.getElementById('gameCodeDisplay');
+
+newGameBtn.addEventListener('click', newGame);
+joinGameBtn.addEventListener('click', joinGame);
+
+function newGame() {
+    socket.emit('newGame');
+    startGame = true;
+    init();
+}
+
+function joinGame() {
+    const code = gameCodeInput.value;
+    startGame = true;
+    socket.emit('joinGame', code);
+    init();
+}
+
+function init() {
+    initialScreen.style.display = "none";
+    gameScreen.style.display = "block";
+}
 
 let down = false;
 document.addEventListener('keydown', e => {

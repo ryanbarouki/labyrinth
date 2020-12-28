@@ -3,12 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link rel="stylesheet" href="/client/style.css">
     <title>Labyrinth</title>
 </head>
 <body>
-    <main>
-        <h1>Online Labyrinth Board Game</h1>
+    <div class="container h-100">
+        <div id="initialScreen" class="h-100">
+            <div class="d-flex flex-column align-items-center justify-content-center h-100">
+                <h1>
+                    <img id="logo" src="./client/img/Labyrinth_Main_Logo.png" alt="">
+                </h1>
+              <button
+                type="submit"
+                class="btn btn-success"
+                id="newGameButton">
+                Create New Game
+              </button>
+              <div><p>OR</p></div>
+              <div class="form-group">
+                <input type="text" placeholder="Enter Game Code" id="gameCodeInput"/>
+              </div>
+              <button
+                type="submit"
+                class="btn btn-success"
+                id="joinGameButton">
+                Join Game
+              </button>
+          </div>
+        </div>
+    </div>
+
+    <main id="gameScreen">
+        <div class="container">
+            <img id="logo" src="./client/img/Labyrinth_Main_Logo.png" alt="">
+        </div>
+        <h1>Your game code is: <span id="gameCodeDisplay"></span></h1>
         <table>
             <tr class="outerrow">
                 <td class="outercol"></td>
@@ -114,8 +144,8 @@
         <div class="notfixed-tiles spare-tile"></div>
     </main>
 
-    <script src="https://cdn.socket.io/socket.io-3.0.1.min.js"></script>
-    <script src="/client/game.js"></script>
-    <script src="/client/player.js"></script>
+    <!-- <script src="https://cdn.socket.io/socket.io-3.0.1.min.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/socket.io-client@3.0.1/dist/socket.io.min.js"></script>
+    <script src="/client/index_client.js"></script>
     </body>
     </html>

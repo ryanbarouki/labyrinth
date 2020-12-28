@@ -14,7 +14,8 @@ let Board = function () {
         ShiftColUp: ShiftColUp,
         ShiftRowLeft: ShiftRowLeft,
         ShiftRowRight: ShiftRowRight,
-        playerList: Object
+        playerList: {},
+        numberOfPlayers:-1,
     };
     return self;
 }
@@ -46,8 +47,8 @@ function ShiftColUp(col) {
     for (let i = 0; i < this.board.length - 1; i++) {
         this.board[i][col] = this.board[i+1][col];
     }
-    // move pieces if they are on the col
     this.board[this.board.length - 1][col] = sparePieceTemp; // set first piece to original spare piece
+    // move pieces if they are on the col
     for (let i in this.playerList) {
         let player = this.playerList[i];
         if (player.x == col) {
@@ -63,8 +64,8 @@ function ShiftRowRight(row) {
     for (let i = this.board.length - 1; i > 0; i--) {
         this.board[row][i] = this.board[row][i-1];
     }
-    // move pieces if they are on the row
     this.board[row][0] = sparePieceTemp; // set first piece to original spare piece
+    // move pieces if they are on the row
     for (let i in this.playerList) {
         let player = this.playerList[i];
         if (player.y == row) {
@@ -81,8 +82,8 @@ function ShiftRowLeft(row) {
     for (let i = 0; i < this.board.length - 1; i++) {
         this.board[row][i] = this.board[row][i+1];
     }
-    // move pieces if they are on the row
     this.board[row][this.board.length - 1] = sparePieceTemp; // set first piece to original spare piece
+    // move pieces if they are on the row
     for (let i in this.playerList) {
         let player = this.playerList[i];
         if (player.y == row) {
