@@ -81,11 +81,3 @@ setInterval(() => {
         socket.emit('newPositions', {playerPack, boardPack});
     }
 }, 1000/25)
-
-
-// TODO:
-// - tile rotations
-// - multiple game sessions with sign in
-// - restrict to 4 players max
-// - cards of target treasure
-// - host on heroku
