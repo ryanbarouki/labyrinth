@@ -5,5 +5,6 @@ An online version of the popular board game Labyrinth
 - tile rotations
 - cards of target treasure
 - random starting configuration
-- host on heroku
+- player turn enforcement
 - BUG: when player 1 leaves - player 2 becomes player 1.
+- AMBITIOUS: frontend redesign with <canvas> to allow animation
