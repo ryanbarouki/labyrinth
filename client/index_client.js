@@ -44,6 +44,13 @@ const spareTile = document.querySelector('.spare-tile');
 newGameBtn.addEventListener('click', newGame);
 joinGameBtn.addEventListener('click', joinGame);
 spareTile.addEventListener('click', rotateTile);
+// spareTile.addEventListener("mouseover", () => {
+//     spareTile.innerHTML = "<img src='./client/img/rotate.svg' id='rotateIcon'>";
+// });
+
+// spareTile.addEventListener('mouseout', () => {
+//     spareTile.innerHTML = "";
+// });
 
 function rotateTile() {
     console.log('rotate');

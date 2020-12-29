@@ -84,6 +84,11 @@ p {
     border-radius: 10%;
 }
 
+#rotateIcon {
+    opacity: 0.5;
+    width:70px;
+    height:70px;
+}
 #gameScreen {
     display: none;
 }

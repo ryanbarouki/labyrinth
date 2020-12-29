@@ -1,4 +1,5 @@
 const Tile = require('./tile.js');
+const {shuffle} = require('./utils.js');
 
 let Board = function () {
     const board = [[new Tile(0,0), new Tile(1), new Tile(2), new Tile(3), new Tile(4), new Tile(5), new Tile(6,1)],
@@ -23,6 +24,35 @@ let Board = function () {
         this.sparePiece.rotation++
         this.sparePiece.rotation = this.sparePiece.rotation.mod(4);
     }
+
+    self.InitialiseBoard = function(board) {
+        let flatBoard = [].concat(...board);
+        flatBoard.push(this.sparePiece); // add the spare tile to be shuffled
+
+        const fixed = {0:new Tile(0,0),
+                       6:new Tile(6,1),
+                       42:new Tile(42,3),
+                       48:new Tile(48,2)};
+
+        flatBoard = flatBoard.filter(tile => {return !(Object.keys(fixed).includes(String(tile.id)))});
+        flatBoard = shuffle(flatBoard);
+
+        // add fixed tiles back in
+        for (let i in fixed) {
+            flatBoard.splice(i, 0, fixed[i]);
+        }
+
+        // replace spare and remove from board array
+        this.sparePiece = flatBoard[flatBoard.length - 1];
+        flatBoard.splice(flatBoard.length - 1,1);
+
+        const newBoard = [];
+        while(flatBoard.length) newBoard.push(flatBoard.splice(0,7));
+        return newBoard;
+    }
+
+    self.board = self.InitialiseBoard(board);
+
     return self;
 }
 
