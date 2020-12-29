@@ -16,7 +16,6 @@ serv.listen(PORT, () => {
     console.log(`listening on port ${PORT}`);
 })
 
-//let gameBoard = new Board();
 let SOCKET_LIST = {};
 const startingPos = [[0,0], [6,0], [6,6], [0,6]]
 const clientRooms = {};
@@ -73,19 +72,25 @@ io.sockets.on('connection', client => {
     client.on('colShiftDown', col => {
         const roomName = clientRooms[client.id];
         gameRooms[roomName].ShiftColDown(col);
-    })
+    });
     client.on('colShiftUp', col => {
         const roomName = clientRooms[client.id];
         gameRooms[roomName].ShiftColUp(col);
-    })
+    });
     client.on('rowShiftRight', row => {
         const roomName = clientRooms[client.id];
         gameRooms[roomName].ShiftRowRight(row);
-    })
+    });
     client.on('rowShiftLeft', row => {
         const roomName = clientRooms[client.id];
         gameRooms[roomName].ShiftRowLeft(row);
-    })
+    });
+
+    client.on('rotate', () => {
+        const roomName = clientRooms[client.id];
+        console.log('rotate');
+        gameRooms[roomName].RotateSparePiece();
+    });
 
     client.on('keyPress', data => {
         const roomName = clientRooms[client.id];
@@ -99,7 +104,6 @@ io.sockets.on('connection', client => {
             else if (data.inputId === 'down')
                 player.MoveDown();
     });
-
 
     client.on('disconnect', () => {
         const roomName = clientRooms[client.id];
@@ -124,6 +128,6 @@ function startGameInterval(roomName) {
             })
         }
         boardPack = gameRooms[roomName];
-        io.sockets.in(roomName).emit('newPositions', {playerPack, boardPack});
+        io.sockets.in(roomName).emit('newPositions', JSON.stringify({playerPack, boardPack}));
     }, 1000/30);
 }

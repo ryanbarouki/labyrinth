@@ -1,12 +1,14 @@
+const Tile = require('./tile.js');
+
 let Board = function () {
-    const board = [[0, 1, 2, 3, 4, 5, 6],
-    [7, 8, 9, 10, 11, 12, 13],
-    [14, 15, 16, 17, 18, 19, 20],
-    [21, 22, 23, 24, 25, 26, 27],
-    [28, 29, 30, 31, 32, 33, 34],
-    [35, 36, 37, 38, 39, 40, 41],
-    [42, 43, 44, 45, 46, 47, 48]]
-    const sparePiece = 49;
+    const board = [[new Tile(0,0), new Tile(1), new Tile(2), new Tile(3), new Tile(4), new Tile(5), new Tile(6,1)],
+    [new Tile(7), new Tile(8), new Tile(9), new Tile(10), new Tile(11), new Tile(12), new Tile(13)],
+    [new Tile(14), new Tile(15), new Tile(16), new Tile(17), new Tile(18), new Tile(19), new Tile(20)],
+    [new Tile(21), new Tile(22), new Tile(23), new Tile(24), new Tile(25), new Tile(26), new Tile(27)],
+    [new Tile(28), new Tile(29), new Tile(30), new Tile(31), new Tile(32), new Tile(33), new Tile(34)],
+    [new Tile(35), new Tile(36), new Tile(37), new Tile(38), new Tile(39), new Tile(40), new Tile(41)],
+    [new Tile(42,3), new Tile(43), new Tile(44), new Tile(45), new Tile(46), new Tile(47), new Tile(48,2)]]
+    const sparePiece = new Tile(49);
     let self = {
         board:board,
         sparePiece:sparePiece,
@@ -16,6 +18,11 @@ let Board = function () {
         ShiftRowRight: ShiftRowRight,
         playerList: {}
     };
+    
+    self.RotateSparePiece = function () {
+        this.sparePiece.rotation++
+        this.sparePiece.rotation = this.sparePiece.rotation.mod(4);
+    }
     return self;
 }
 

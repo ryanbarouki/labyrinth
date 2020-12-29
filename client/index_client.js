@@ -11,6 +11,7 @@ socket.on('gameCode', roomName => {
     gameCodeDisplay.innerText = gameCode;
     startGame = true;
     init();
+    GiveArrowsEventListeners();
 });
 
 socket.on('unknownCode', () => {
@@ -24,6 +25,7 @@ socket.on('gameFull', () => {
 
 socket.on('newPositions', package => {
     if (startGame){
+        package = JSON.parse(package);
         players = package.playerPack;
         board = package.boardPack.board;
         sparePiece = package.boardPack.sparePiece;
@@ -37,9 +39,16 @@ const newGameBtn = document.getElementById('newGameButton');
 const joinGameBtn = document.getElementById('joinGameButton');
 const gameCodeInput = document.getElementById('gameCodeInput');
 const gameCodeDisplay = document.getElementById('gameCodeDisplay');
+const spareTile = document.querySelector('.spare-tile');
 
 newGameBtn.addEventListener('click', newGame);
 joinGameBtn.addEventListener('click', joinGame);
+spareTile.addEventListener('click', rotateTile);
+
+function rotateTile() {
+    console.log('rotate');
+    socket.emit('rotate');
+}
 
 function newGame() {
     socket.emit('newGame');
@@ -174,16 +183,19 @@ function UpdateBoard() {
     for (let i = 0; i < flatBoard.length; i++){
         table[i].innerHTML = ""; // clears the board
         if(flatBoard[i] != null){
-            table[i].setAttribute("id", `f${flatBoard[i]}`); //= "<div class='notfixed-tiles'" + `id=${flatBoard[i]}>${flatBoard[i]+1}</div>`;
+            const rotation = flatBoard[i].rotation * 90;
+            table[i].setAttribute("id", `f${flatBoard[i].id}`); //= "<div class='notfixed-tiles'" + `id=${flatBoard[i]}>${flatBoard[i]+1}</div>`;
+            table[i].style.transform = `rotate(${rotation}deg)`;
         }
     }
-    spareTile.setAttribute("id", `f${sparePiece}`);
+    // update spare tile orientation
+    const rotation = sparePiece.rotation * 90;
+    spareTile.setAttribute("id", `f${sparePiece.id}`);
+    spareTile.style.transform = `rotate(${rotation}deg)`;
     UpdatePlayers(table);
 }
 
 function UpdatePlayers(gameBoard) {
-    // let newGameBoard = [];
-    // while (gameBoard.length) newGameBoard.push(gameBoard.toa.splice(0,7));
     for (let i = 0; i < players.length; i++){
         const x = players[i].x;
         const y = players[i].y;
@@ -192,5 +204,3 @@ function UpdatePlayers(gameBoard) {
         gameBoard[pos].innerHTML += `<div class="player" id=${id}></div>`;
     }
 }
-
-GiveArrowsEventListeners();
