@@ -88,7 +88,6 @@ io.sockets.on('connection', client => {
 
     client.on('rotate', () => {
         const roomName = clientRooms[client.id];
-        console.log('rotate');
         gameRooms[roomName].RotateSparePiece();
     });
 

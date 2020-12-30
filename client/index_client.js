@@ -7,7 +7,6 @@ let startGame = false;
 
 socket.on('gameCode', roomName => {
     gameCode = roomName;
-    console.log(gameCode);
     gameCodeDisplay.innerText = gameCode;
     startGame = true;
     init();
@@ -43,7 +42,11 @@ const spareTile = document.querySelector('.spare-tile');
 
 newGameBtn.addEventListener('click', newGame);
 joinGameBtn.addEventListener('click', joinGame);
-spareTile.addEventListener('click', rotateTile);
+spareTile.addEventListener('click', () => {
+    socket.emit('rotate');
+});
+
+// ATTEMPT TO PUT ROTATE IMAGE WHEN HOVER OVER SPARE TILE  
 // spareTile.addEventListener("mouseover", () => {
 //     spareTile.innerHTML = "<img src='./client/img/rotate.svg' id='rotateIcon'>";
 // });
@@ -51,11 +54,6 @@ spareTile.addEventListener('click', rotateTile);
 // spareTile.addEventListener('mouseout', () => {
 //     spareTile.innerHTML = "";
 // });
-
-function rotateTile() {
-    console.log('rotate');
-    socket.emit('rotate');
-}
 
 function newGame() {
     socket.emit('newGame');
