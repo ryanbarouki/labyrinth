@@ -1,5 +1,6 @@
 const Tile = require('./tile.js');
 const {shuffle} = require('./utils.js');
+const Card = require("./card.js");
 
 let Board = function () {
     const board = [[new Tile(0,0), new Tile(1), new Tile(2), new Tile(3), new Tile(4), new Tile(5), new Tile(6,1)],
@@ -10,6 +11,10 @@ let Board = function () {
     [new Tile(35), new Tile(36), new Tile(37), new Tile(38), new Tile(39), new Tile(40), new Tile(41)],
     [new Tile(42,3), new Tile(43), new Tile(44), new Tile(45), new Tile(46), new Tile(47), new Tile(48,2)]]
     const sparePiece = new Tile(49);
+    let cards = [new Card(1), new Card(2), new Card(4), new Card(7), new Card(12), new Card(14),
+                   new Card(15), new Card(16), new Card(18), new Card(20), new Card(22), new Card(23),
+                   new Card(27), new Card(28), new Card(30), new Card(31), new Card(32), new Card(34),
+                   new Card(36), new Card(41), new Card(43), new Card(44), new Card(46), new Card(49)];
     let self = {
         board:board,
         sparePiece:sparePiece,
@@ -49,6 +54,21 @@ let Board = function () {
         const newBoard = [];
         while(flatBoard.length) newBoard.push(flatBoard.splice(0,7));
         return newBoard;
+    }
+
+    self.DealCards = function() {
+        if (this.playerList == {}) return;
+
+        let numPlayers = Object.keys(this.playerList).length;
+        const cardsPerPlayer = 24 / numPlayers;
+        cards = shuffle(cards);
+        let j = 0;
+        for (let i in this.playerList){
+            let player = this.playerList[i];
+            player.cards = cards.slice(j, j + cardsPerPlayer);
+            console.log(player.cards);
+            j += cardsPerPlayer;
+        }
     }
 
     self.board = self.InitialiseBoard(board);

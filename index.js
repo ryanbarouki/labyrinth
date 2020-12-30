@@ -36,7 +36,7 @@ io.sockets.on('connection', client => {
         gameRooms[roomName] = new Board();
         client.join(roomName);
         createNewPlayer(roomName);
-        startGameInterval(roomName);
+        startGameInterval(roomName, client.id);
     }
 
     function handleJoinGame(roomName) {
@@ -59,14 +59,15 @@ io.sockets.on('connection', client => {
         client.join(roomName);
         client.emit('gameCode', roomName);
         createNewPlayer(roomName);
-        startGameInterval(roomName);
+        startGameInterval(roomName, client.id);
     }
     
     function createNewPlayer(room) {
         let num = gameRooms[room].playerList != {} ? Object.keys(gameRooms[room].playerList).length : 0;
         const x = startingPos[num][0];
         const y = startingPos[num][1];
-        gameRooms[room].playerList[client.id] = new Player(client.id, x, y);
+        gameRooms[room].playerList[client.id] = new Player(client.id, x, y, num + 1);
+        gameRooms[room].DealCards();
     }
     // updating the board
     client.on('colShiftDown', col => {
@@ -90,6 +91,13 @@ io.sockets.on('connection', client => {
         const roomName = clientRooms[client.id];
         gameRooms[roomName].RotateSparePiece();
     });
+
+    client.on('nextCard', () => {
+        const roomName = clientRooms[client.id];
+        let cards = gameRooms[roomName].playerList[client.id].cards;
+        if(cards.length > 0)
+            cards.splice(0,1);
+    })
 
     client.on('keyPress', data => {
         const roomName = clientRooms[client.id];
@@ -116,17 +124,18 @@ io.sockets.on('connection', client => {
 
 }); 
 
-function startGameInterval(roomName) {
+function startGameInterval(roomName, id) {
     const intervalID = setInterval(() => {
-        let playerPack = [];
-        let boardPack;
-        for(let i in gameRooms[roomName].playerList) {
-            let player = gameRooms[roomName].playerList[i];
-            playerPack.push({x:player.x,
-                       y:player.y
-            })
+        // send the board to the clients
+        const boardPack = gameRooms[roomName];
+        let cardPack = [];
+        const player = gameRooms[roomName].playerList[id];
+        if (player) {
+            cardPack = player.cards;
         }
-        boardPack = gameRooms[roomName];
-        io.sockets.in(roomName).emit('newPositions', JSON.stringify({playerPack, boardPack}));
-    }, 1000/30);
+        io.to(id).emit('playerCards', JSON.stringify({cardPack}));
+        io.sockets.in(roomName).emit('newPositions', JSON.stringify({boardPack}));
+        // send cards to client individually
+
+    }, 1000/25);
 }

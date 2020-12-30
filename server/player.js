@@ -1,13 +1,11 @@
-let Player = function(id,x,y) {
+let Player = function(id,x,y,playerNumber) {
     const self = {
         x:x,
         y:y,
         id:id,
         score:0,
-        pressedRight:false,
-        pressedLeft:false,
-        pressedUp:false,
-        pressedDown:false
+        cards: [],
+        playerNumber: playerNumber
     }
     self.MoveRight = function(){
         if(this.x < 6)

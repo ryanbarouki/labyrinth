@@ -4,6 +4,7 @@ let sparePiece = 49;
 let players = [];
 let gameCode;
 let startGame = false;
+let cards = [];
 
 socket.on('gameCode', roomName => {
     gameCode = roomName;
@@ -25,11 +26,17 @@ socket.on('gameFull', () => {
 socket.on('newPositions', package => {
     if (startGame){
         package = JSON.parse(package);
-        players = package.playerPack;
+        players = package.boardPack.playerList;
         board = package.boardPack.board;
         sparePiece = package.boardPack.sparePiece;
         UpdateBoard();
     }
+});
+
+socket.on('playerCards', package => {
+    package = JSON.parse(package);
+    cards = package.cardPack;
+    //console.log(cards[0].id);
 });
 
 const gameScreen = document.getElementById('gameScreen');
@@ -39,12 +46,17 @@ const joinGameBtn = document.getElementById('joinGameButton');
 const gameCodeInput = document.getElementById('gameCodeInput');
 const gameCodeDisplay = document.getElementById('gameCodeDisplay');
 const spareTile = document.querySelector('.spare-tile');
+const targetCard = document.querySelector(".targetCard");
+const nextCardBtn = document.getElementById('nextCardBtn');
 
 newGameBtn.addEventListener('click', newGame);
 joinGameBtn.addEventListener('click', joinGame);
 spareTile.addEventListener('click', () => {
     socket.emit('rotate');
 });
+nextCardBtn.addEventListener('click', () => {
+    socket.emit('nextCard');
+})
 
 // ATTEMPT TO PUT ROTATE IMAGE WHEN HOVER OVER SPARE TILE  
 // spareTile.addEventListener("mouseover", () => {
@@ -197,15 +209,23 @@ function UpdateBoard() {
     const rotation = sparePiece.rotation * 90;
     spareTile.setAttribute("id", `f${sparePiece.id}`);
     spareTile.style.transform = `rotate(${rotation}deg)`;
+
+    // update target card
+    if (cards.length > 0) {
+        let id = cards[0].id;
+        targetCard.setAttribute("id", `f${id}`); 
+    }
+    
     UpdatePlayers(table);
 }
 
 function UpdatePlayers(gameBoard) {
-    for (let i = 0; i < players.length; i++){
-        const x = players[i].x;
-        const y = players[i].y;
-        pos = 7*y + x;
-        let id = `player-${i+1}`;
+    for (let i in players){
+        let player = players[i];
+        const x = player.x;
+        const y = player.y;
+        const pos = 7*y + x;
+        let id = `player-${player.playerNumber}`;
         gameBoard[pos].innerHTML += `<div class="player" id=${id}></div>`;
     }
 }
