@@ -17,7 +17,6 @@ socket.on('showLobby', package => {
     players = package.playerList;
     gameCodeDisplay.innerText = gameCode;
     showLobby();
-    // here on down needs to move
 });
 
 socket.on('unknownCode', () => {

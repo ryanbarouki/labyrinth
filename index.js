@@ -151,10 +151,10 @@ function startGameInterval(roomName) {
             if (player) {
                 cardPack = player.cards;
             }
+            // send cards to client individually
             io.to(id).emit('playerCards', JSON.stringify({cardPack}));
         }
         io.sockets.in(roomName).emit('newPositions', JSON.stringify({boardPack}));
-        // send cards to client individually
 
     }, 1000/25);
 }
