@@ -6,12 +6,18 @@ let gameCode;
 let startGame = false;
 let cards = [];
 
-socket.on('gameCode', roomName => {
-    gameCode = roomName;
-    gameCodeDisplay.innerText = gameCode;
+socket.on('startGame', () => {
     startGame = true;
-    init();
     GiveArrowsEventListeners();
+    showBoard();
+})
+socket.on('showLobby', package => {
+    package = JSON.parse(package);
+    gameCode = package.roomName;
+    players = package.playerList;
+    gameCodeDisplay.innerText = gameCode;
+    showLobby();
+    // here on down needs to move
 });
 
 socket.on('unknownCode', () => {
@@ -21,6 +27,10 @@ socket.on('unknownCode', () => {
 
 socket.on('gameFull', () => {
     alert("There are already 4 players in this game :(");
+})
+
+socket.on('gameStarted', () => {
+    alert("This game is already in progress :(");
 })
 
 socket.on('newPositions', package => {
@@ -48,39 +58,47 @@ const gameCodeDisplay = document.getElementById('gameCodeDisplay');
 const spareTile = document.querySelector('.spare-tile');
 const targetCard = document.querySelector(".targetCard");
 const nextCardBtn = document.getElementById('nextCardBtn');
+const startGameBtn = document.getElementById('startGameBtn');
+const lobbyScreen = document.getElementById('lobby');
+const lobbyPlayers = document.getElementById('lobbyPlayers');
 
-newGameBtn.addEventListener('click', newGame);
+newGameBtn.addEventListener('click', () => {
+    socket.emit('newGame')
+});
+
 joinGameBtn.addEventListener('click', joinGame);
+
 spareTile.addEventListener('click', () => {
     socket.emit('rotate');
 });
+
 nextCardBtn.addEventListener('click', () => {
     socket.emit('nextCard');
-})
+});
 
-// ATTEMPT TO PUT ROTATE IMAGE WHEN HOVER OVER SPARE TILE  
-// spareTile.addEventListener("mouseover", () => {
-//     spareTile.innerHTML = "<img src='./client/img/rotate.svg' id='rotateIcon'>";
-// });
-
-// spareTile.addEventListener('mouseout', () => {
-//     spareTile.innerHTML = "";
-// });
-
-function newGame() {
-    socket.emit('newGame');
-    startGame = true;
-    init();
-}
+startGameBtn.addEventListener('click', () => {
+    socket.emit('startGameBtn', gameCode);
+});
 
 function joinGame() {
     const code = gameCodeInput.value;
     socket.emit('joinGame', code);
 }
 
-function init() {
-    initialScreen.style.display = "none";
+function showBoard() {
+    lobbyScreen.style.display = "none";
     gameScreen.style.display = "block";
+}
+
+function showLobby() {
+    initialScreen.style.display = "none";
+    lobbyScreen.style.display = "block";
+    lobbyPlayers.innerHTML = "";
+    for (let i in players) {
+        let player = players[i];
+        let id = `player-${player.playerNumber}`;
+        lobbyPlayers.innerHTML += `<p>Player ${player.playerNumber}:</p><div class="player" id=${id}></div>`;
+    }
 }
 
 let down = false;

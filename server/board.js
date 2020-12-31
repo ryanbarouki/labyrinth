@@ -22,7 +22,8 @@ let Board = function () {
         ShiftColUp: ShiftColUp,
         ShiftRowLeft: ShiftRowLeft,
         ShiftRowRight: ShiftRowRight,
-        playerList: {}
+        playerList: {},
+        gameHasStarted: false
     };
     
     self.RotateSparePiece = function () {
@@ -66,7 +67,6 @@ let Board = function () {
         for (let i in this.playerList){
             let player = this.playerList[i];
             player.cards = cards.slice(j, j + cardsPerPlayer);
-            console.log(player.cards);
             j += cardsPerPlayer;
         }
     }

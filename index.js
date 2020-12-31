@@ -5,6 +5,7 @@ const PORT = process.env.PORT || 3000;
 const Player = require("./server/player.js"); // import the player class
 const Board = require("./server/board.js"); // import the board class
 const {makeid} = require("./server/utils.js");
+const { GameLoop } = require("./server/game.js");
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + "/client/index.html");
@@ -28,15 +29,22 @@ io.sockets.on('connection', client => {
     
     client.on('newGame', handleNewGame);
     client.on('joinGame', handleJoinGame);
+    client.on('startGameBtn', handleStartGame);
     
+    function handleStartGame(roomName) {
+        startGameInterval(roomName);
+        gameRooms[roomName].gameHasStarted = true;
+        io.sockets.in(roomName).emit('startGame');
+    }
+
     function handleNewGame() {
         let roomName = makeid(5);
         clientRooms[client.id] = roomName;
-        client.emit('gameCode', roomName);
         gameRooms[roomName] = new Board();
         client.join(roomName);
         createNewPlayer(roomName);
-        startGameInterval(roomName, client.id);
+        let playerList = gameRooms[roomName].playerList;
+        client.emit('showLobby', JSON.stringify({roomName, playerList}));
     }
 
     function handleJoinGame(roomName) {
@@ -50,16 +58,20 @@ io.sockets.on('connection', client => {
         if (numClients === 0) {
             client.emit('unknownCode');
             return;
-        } else if (numClients > 3) {
+        } else if (gameRooms[roomName].gameHasStarted) {
+            client.emit('gameStarted');
+            return;
+        } 
+        else if (numClients > 3) {
             client.emit('gameFull');
             return;
         }
         clientRooms[client.id] = roomName;
 
         client.join(roomName);
-        client.emit('gameCode', roomName);
         createNewPlayer(roomName);
-        startGameInterval(roomName, client.id);
+        let playerList = gameRooms[roomName].playerList;
+        io.sockets.in(roomName).emit('showLobby', JSON.stringify({roomName, playerList}));
     }
     
     function createNewPlayer(room) {
@@ -92,6 +104,8 @@ io.sockets.on('connection', client => {
         gameRooms[roomName].RotateSparePiece();
     });
 
+
+    // THIS WILL BE REMOVED WHEN AUTO CHECKING IS DONE
     client.on('nextCard', () => {
         const roomName = clientRooms[client.id];
         let cards = gameRooms[roomName].playerList[client.id].cards;
@@ -124,16 +138,21 @@ io.sockets.on('connection', client => {
 
 }); 
 
-function startGameInterval(roomName, id) {
+function startGameInterval(roomName) {
     const intervalID = setInterval(() => {
         // send the board to the clients
+        // GAME LOOP HERE
         const boardPack = gameRooms[roomName];
-        let cardPack = [];
-        const player = gameRooms[roomName].playerList[id];
-        if (player) {
-            cardPack = player.cards;
+
+        const players = gameRooms[roomName].playerList;
+        for (let id in players){
+            let player = players[id];
+            let cardPack = [];
+            if (player) {
+                cardPack = player.cards;
+            }
+            io.to(id).emit('playerCards', JSON.stringify({cardPack}));
         }
-        io.to(id).emit('playerCards', JSON.stringify({cardPack}));
         io.sockets.in(roomName).emit('newPositions', JSON.stringify({boardPack}));
         // send cards to client individually
 

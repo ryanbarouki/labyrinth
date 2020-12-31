@@ -98,11 +98,19 @@ p {
     display: none;
 }
 
+#lobby {
+    display: none;
+}
+
 #logo {
     height:10rem;
     width: auto;
     margin: auto;
     display: block;
+}
+
+#lobbyPlayers {
+    margin-bottom: 1rem;
 }
 #player-1 {
     z-index:110;
