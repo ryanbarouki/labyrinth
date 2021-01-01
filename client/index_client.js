@@ -34,6 +34,14 @@ socket.on('gameStarted', () => {
     alert("This game is already in progress :(");
 })
 
+socket.on('endGame', (package) => {
+    package = JSON.parse(package);
+    let winner = package.player;
+    gameScreen.style.display = "none";
+    endGameScreen.style.display = "block";
+    winnerDisplay.innerText = `Player-${winner.playerNumber} wins!`
+})
+
 socket.on('newPositions', package => {
     if (startGame){
         package = JSON.parse(package);
@@ -65,6 +73,8 @@ const startGameBtn = document.getElementById('startGameBtn');
 const lobbyScreen = document.getElementById('lobby');
 const lobbyPlayers = document.getElementById('lobbyPlayers');
 const endTurnBtn = document.getElementById('endTurnBtn');
+const endGameScreen = document.getElementById('endGameScreen');
+const winnerDisplay = document.getElementById('winnerDisplay');
 
 endTurnBtn.addEventListener('click', () => {
     socket.emit('endTurn', gameCode);
@@ -80,10 +90,6 @@ spareTile.addEventListener('click', () => {
     socket.emit('rotate');
 });
 
-nextCardBtn.addEventListener('click', () => {
-    socket.emit('nextCard');
-});
-
 startGameBtn.addEventListener('click', () => {
     socket.emit('startGameBtn', gameCode);
 });
@@ -95,6 +101,7 @@ function joinGame() {
 
 function showBoard() {
     lobbyScreen.style.display = "none";
+    endGameScreen.style.display = "none";
     gameScreen.style.display = "block";
 }
 

@@ -102,6 +102,10 @@ p {
     display: none;
 }
 
+#endGameScreen {
+    display: none;
+}
+
 #logo {
     height:10rem;
     width: auto;
