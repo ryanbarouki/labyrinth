@@ -23,8 +23,16 @@ let Board = function () {
         ShiftRowLeft: ShiftRowLeft,
         ShiftRowRight: ShiftRowRight,
         playerList: {},
-        gameHasStarted: false
+        gameHasStarted: false,
+        playerTurn: ""
     };
+
+    self.NextTurn = function() {
+        let playerIds = Object.keys(this.playerList)
+        const indexOfCurrentPlayer = playerIds.indexOf(this.playerTurn);
+        let indexOfNextPlayer = (indexOfCurrentPlayer + 1).mod(playerIds.length);
+        this.playerTurn = playerIds[indexOfNextPlayer];
+    }
     
     self.RotateSparePiece = function () {
         this.sparePiece.rotation++

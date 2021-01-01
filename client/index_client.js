@@ -5,6 +5,8 @@ let players = [];
 let gameCode;
 let startGame = false;
 let cards = [];
+let playerTurn = "";
+let playerId = "";
 
 socket.on('startGame', () => {
     startGame = true;
@@ -38,6 +40,7 @@ socket.on('newPositions', package => {
         players = package.boardPack.playerList;
         board = package.boardPack.board;
         sparePiece = package.boardPack.sparePiece;
+        playerTurn = package.boardPack.playerTurn;
         UpdateBoard();
     }
 });
@@ -45,6 +48,7 @@ socket.on('newPositions', package => {
 socket.on('playerCards', package => {
     package = JSON.parse(package);
     cards = package.cardPack;
+    playerId = package.id;
     //console.log(cards[0].id);
 });
 
@@ -60,6 +64,11 @@ const nextCardBtn = document.getElementById('nextCardBtn');
 const startGameBtn = document.getElementById('startGameBtn');
 const lobbyScreen = document.getElementById('lobby');
 const lobbyPlayers = document.getElementById('lobbyPlayers');
+const endTurnBtn = document.getElementById('endTurnBtn');
+
+endTurnBtn.addEventListener('click', () => {
+    socket.emit('endTurn', gameCode);
+});
 
 newGameBtn.addEventListener('click', () => {
     socket.emit('newGame')
@@ -233,6 +242,13 @@ function UpdateBoard() {
         targetCard.setAttribute("id", `f${id}`); 
     }
     
+    // update End Turn button
+    if (playerId != playerTurn) {
+        endTurnBtn.disabled = true;
+    } else {
+        endTurnBtn.disabled = false;
+    }
+
     UpdatePlayers(table);
 }
 

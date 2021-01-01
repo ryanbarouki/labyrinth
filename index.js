@@ -17,7 +17,6 @@ serv.listen(PORT, () => {
     console.log(`listening on port ${PORT}`);
 })
 
-let SOCKET_LIST = {};
 const startingPos = [[0,0], [6,0], [6,6], [0,6]]
 const clientRooms = {};
 const gameRooms = {};
@@ -25,15 +24,20 @@ const gameRooms = {};
 const io = require('socket.io')(serv,{});
 io.sockets.on('connection', client => {
     console.log('socket connection');
-    SOCKET_LIST[client.id] = client;
     
     client.on('newGame', handleNewGame);
     client.on('joinGame', handleJoinGame);
     client.on('startGameBtn', handleStartGame);
+    client.on('endTurn', handleEndTurn);
+
+    function handleEndTurn(roomName) {
+        gameRooms[roomName].NextTurn();
+    }
     
     function handleStartGame(roomName) {
         startGameInterval(roomName);
         gameRooms[roomName].gameHasStarted = true;
+        gameRooms[roomName].playerTurn = Object.keys(gameRooms[roomName].playerList)[0];
         io.sockets.in(roomName).emit('startGame');
     }
 
@@ -84,23 +88,28 @@ io.sockets.on('connection', client => {
     // updating the board
     client.on('colShiftDown', col => {
         const roomName = clientRooms[client.id];
+        if (gameRooms[roomName].playerTurn != client.id) return;
         gameRooms[roomName].ShiftColDown(col);
     });
     client.on('colShiftUp', col => {
         const roomName = clientRooms[client.id];
+        if (gameRooms[roomName].playerTurn != client.id) return;
         gameRooms[roomName].ShiftColUp(col);
     });
     client.on('rowShiftRight', row => {
         const roomName = clientRooms[client.id];
+        if (gameRooms[roomName].playerTurn != client.id) return;
         gameRooms[roomName].ShiftRowRight(row);
     });
     client.on('rowShiftLeft', row => {
         const roomName = clientRooms[client.id];
+        if (gameRooms[roomName].playerTurn != client.id) return;
         gameRooms[roomName].ShiftRowLeft(row);
     });
 
     client.on('rotate', () => {
         const roomName = clientRooms[client.id];
+        if (gameRooms[roomName].playerTurn != client.id) return;
         gameRooms[roomName].RotateSparePiece();
     });
 
@@ -108,6 +117,7 @@ io.sockets.on('connection', client => {
     // THIS WILL BE REMOVED WHEN AUTO CHECKING IS DONE
     client.on('nextCard', () => {
         const roomName = clientRooms[client.id];
+        if (gameRooms[roomName].playerTurn != client.id) return;
         let cards = gameRooms[roomName].playerList[client.id].cards;
         if(cards.length > 0)
             cards.splice(0,1);
@@ -116,19 +126,19 @@ io.sockets.on('connection', client => {
     client.on('keyPress', data => {
         const roomName = clientRooms[client.id];
         let player = gameRooms[roomName].playerList[client.id];
-            if (data.inputId === 'left')
-                player.MoveLeft();
-            else if (data.inputId === 'right')
-                player.MoveRight();
-            else if (data.inputId === 'up')
-                player.MoveUp();
-            else if (data.inputId === 'down')
-                player.MoveDown();
+        if (gameRooms[roomName].playerTurn != client.id) return;
+        if (data.inputId === 'left')
+            player.MoveLeft();
+        else if (data.inputId === 'right')
+            player.MoveRight();
+        else if (data.inputId === 'up')
+            player.MoveUp();
+        else if (data.inputId === 'down')
+            player.MoveDown();
     });
 
     client.on('disconnect', () => {
         const roomName = clientRooms[client.id];
-        delete SOCKET_LIST[client.id];
         if (roomName) {
             // note that the room is not being deleted
             // want to delete the room when the host player has left
@@ -152,7 +162,7 @@ function startGameInterval(roomName) {
                 cardPack = player.cards;
             }
             // send cards to client individually
-            io.to(id).emit('playerCards', JSON.stringify({cardPack}));
+            io.to(id).emit('playerCards', JSON.stringify({cardPack, id}));
         }
         io.sockets.in(roomName).emit('newPositions', JSON.stringify({boardPack}));
 
