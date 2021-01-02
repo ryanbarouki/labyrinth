@@ -76,13 +76,19 @@ const endTurnBtn = document.getElementById('endTurnBtn');
 const endGameScreen = document.getElementById('endGameScreen');
 const winnerDisplay = document.getElementById('winnerDisplay');
 const scoreBoard = document.getElementById('scoreBoard');
+const nameInput = document.getElementById('nameInput');
 
 endTurnBtn.addEventListener('click', () => {
     socket.emit('endTurn', gameCode);
 });
 
 newGameBtn.addEventListener('click', () => {
-    socket.emit('newGame')
+    let name = nameInput.value;
+    if (!name){
+        alert('Please enter a name');
+        return;
+    }
+    socket.emit('newGame', name);
 });
 
 joinGameBtn.addEventListener('click', joinGame);
@@ -96,8 +102,13 @@ startGameBtn.addEventListener('click', () => {
 });
 
 function joinGame() {
+    let name = nameInput.value;
+    if (!name){
+        alert('Please enter a name');
+        return;
+    }
     const code = gameCodeInput.value;
-    socket.emit('joinGame', code);
+    socket.emit('joinGame', JSON.stringify({code, name}));
 }
 
 function showBoard() {
@@ -113,7 +124,7 @@ function showLobby() {
     for (let i in players) {
         let player = players[i];
         let id = `player-${player.playerNumber}`;
-        lobbyPlayers.innerHTML += `<p>Player ${player.playerNumber}:</p><div class="player" id=${id}></div>`;
+        lobbyPlayers.innerHTML += `<p>${player.playerName}:</p><div class="player" id=${id}></div>`;
     }
 }
 
@@ -278,7 +289,7 @@ function UpdateScoreBoard() {
         let targetCardId = player.cards[0].id;
         scoreBoard.innerHTML += `<tr>
                                     <th scope="row">${label}</th>
-                                    <td>Player ${player.playerNumber}</td>
+                                    <td>${player.playerName}</td>
                                     <td>${player.score}</td>
                                     <td><div class="notfixed-tiles targetCard" id=f${targetCardId}></div></td>
                                 </tr>`

@@ -46,17 +46,20 @@ io.sockets.on('connection', client => {
         io.sockets.in(roomName).emit('startGame');
     }
 
-    function handleNewGame() {
+    function handleNewGame(playerName) {
         let roomName = makeid(5);
         clientRooms[client.id] = roomName;
         gameRooms[roomName] = new Board();
         client.join(roomName);
-        createNewPlayer(roomName);
+        createNewPlayer(roomName, playerName);
         let playerList = gameRooms[roomName].playerList;
         client.emit('showLobby', JSON.stringify({roomName, playerList}));
     }
 
-    function handleJoinGame(roomName) {
+    function handleJoinGame(data) {
+        data = JSON.parse(data);
+        const roomName = data.code;
+        const playerName = data.name;
         const room = io.sockets.adapter.rooms.get(roomName);
         
         let numClients = 0;
@@ -78,16 +81,17 @@ io.sockets.on('connection', client => {
         clientRooms[client.id] = roomName;
 
         client.join(roomName);
-        createNewPlayer(roomName);
+        createNewPlayer(roomName, playerName);
         let playerList = gameRooms[roomName].playerList;
         io.sockets.in(roomName).emit('showLobby', JSON.stringify({roomName, playerList}));
     }
     
-    function createNewPlayer(room) {
+    function createNewPlayer(room, playerName) {
         let num = gameRooms[room].playerList != {} ? Object.keys(gameRooms[room].playerList).length : 0;
         const x = startingPos[num][0];
         const y = startingPos[num][1];
         gameRooms[room].playerList[client.id] = new Player(client.id, x, y, num + 1);
+        gameRooms[room].playerList[client.id].playerName = playerName;
         gameRooms[room].DealCards();
     }
     // updating the board

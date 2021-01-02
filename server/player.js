@@ -5,7 +5,8 @@ let Player = function(id,x,y,playerNumber) {
         id:id,
         score:0,
         cards: [],
-        playerNumber: playerNumber
+        playerNumber: playerNumber,
+        playerName: ""
     }
     self.MoveRight = function(){
         if(this.x < 6)
