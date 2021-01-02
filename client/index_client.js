@@ -39,7 +39,7 @@ socket.on('endGame', (package) => {
     let winner = package.player;
     gameScreen.style.display = "none";
     endGameScreen.style.display = "block";
-    winnerDisplay.innerText = `Player-${winner.playerNumber} wins!`
+    winnerDisplay.innerText = `Player ${winner.playerNumber} wins!`
 })
 
 socket.on('newPositions', package => {
@@ -75,6 +75,7 @@ const lobbyPlayers = document.getElementById('lobbyPlayers');
 const endTurnBtn = document.getElementById('endTurnBtn');
 const endGameScreen = document.getElementById('endGameScreen');
 const winnerDisplay = document.getElementById('winnerDisplay');
+const scoreBoard = document.getElementById('scoreBoard');
 
 endTurnBtn.addEventListener('click', () => {
     socket.emit('endTurn', gameCode);
@@ -243,11 +244,8 @@ function UpdateBoard() {
     spareTile.setAttribute("id", `f${sparePiece.id}`);
     spareTile.style.transform = `rotate(${rotation}deg)`;
 
-    // update target card
-    if (cards.length > 0) {
-        let id = cards[0].id;
-        targetCard.setAttribute("id", `f${id}`); 
-    }
+    UpdatePlayers(table);
+    UpdateScoreBoard();
     
     // update End Turn button
     if (playerId != playerTurn) {
@@ -256,7 +254,6 @@ function UpdateBoard() {
         endTurnBtn.disabled = false;
     }
 
-    UpdatePlayers(table);
 }
 
 function UpdatePlayers(gameBoard) {
@@ -267,5 +264,23 @@ function UpdatePlayers(gameBoard) {
         const pos = 7*y + x;
         let id = `player-${player.playerNumber}`;
         gameBoard[pos].innerHTML += `<div class="player" id=${id}></div>`;
+    }
+}
+
+function UpdateScoreBoard() {
+    scoreBoard.innerHTML = ""; // clear board
+    for (let i in players) {
+        let label = "";
+        let player = players[i];
+        if (!player.cards[0]) return; 
+        if (player.id == playerTurn)
+            label = "->";
+        let targetCardId = player.cards[0].id;
+        scoreBoard.innerHTML += `<tr>
+                                    <th scope="row">${label}</th>
+                                    <td>Player ${player.playerNumber}</td>
+                                    <td>${player.score}</td>
+                                    <td><div class="notfixed-tiles targetCard" id=f${targetCardId}></div></td>
+                                </tr>`
     }
 }

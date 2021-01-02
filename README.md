@@ -3,6 +3,7 @@ An online version of the popular board game Labyrinth
 
 # TODO
 - make sure game stops running when game ends
+- custom names
 - one tile slot per move
 - make mobile friendly
 - manage deletion of game rooms
@@ -13,3 +14,4 @@ An online version of the popular board game Labyrinth
 - ~~player turn enforcement~~
 - ~~count points when end turn~~ 
 - ~~declare winner and end game~~
+- ~~added score board~~
