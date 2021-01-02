@@ -34,6 +34,7 @@ io.sockets.on('connection', client => {
         gameRooms[roomName].NextTurn();
         const result = gameRooms[roomName].Score(client.id);
         const player = gameRooms[roomName].playerList[client.id]
+        gameRooms[roomName].boardShifted = false; // to allow board to move on next turn
         if (result == 1)
             io.sockets.in(roomName).emit('endGame', JSON.stringify({player}));
 
@@ -126,7 +127,7 @@ io.sockets.on('connection', client => {
         const roomName = clientRooms[client.id];
         let player = gameRooms[roomName].playerList[client.id];
         if (gameRooms[roomName].playerTurn != client.id) return;
-        if (!ValidMove(gameRooms[roomName].board, player, data.inputId)) return;
+        if (!ValidMove(gameRooms[roomName], player, data.inputId)) return;
         if (data.inputId === 'left')
             player.MoveLeft();
         else if (data.inputId === 'right')
@@ -148,11 +149,13 @@ io.sockets.on('connection', client => {
 
 }); 
 
-function ValidMove(board, player, direction) {
+function ValidMove(gameBoard, player, direction) {
+    const board = gameBoard.board;
     let result = false;
     const x = player.x;
     const y = player.y;
     const currentTile = board[y][x];
+    if (!gameBoard.boardShifted) return false;
     if (direction == 'up') {
         if (y == 0) return;
         const targetTile = board[y-1][x];

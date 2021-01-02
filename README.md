@@ -2,7 +2,6 @@
 An online version of the popular board game Labyrinth
 
 # TODO
-- one tile slot per move
 - can't slot in where piece just came from
 - make sure game stops running when game ends
 - manage deletion of game rooms
@@ -16,3 +15,4 @@ An online version of the popular board game Labyrinth
 - ~~added score board~~
 - ~~custom names~~
 - ~~move validation!~~
+- ~~one tile slot per move~~

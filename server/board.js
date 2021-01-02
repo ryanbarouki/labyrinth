@@ -24,7 +24,8 @@ let Board = function () {
         ShiftRowRight: ShiftRowRight,
         playerList: {},
         gameHasStarted: false,
-        playerTurn: ""
+        playerTurn: "",
+        boardShifted: false
     };
 
     self.Score = function(id) {
@@ -109,6 +110,7 @@ Number.prototype.mod = function(n) {
 };
 
 function ShiftColDown(col) {
+    if (this.boardShifted) return;  
     sparePieceTemp = this.sparePiece; // save current spare piece
     this.sparePiece = this.board[this.board.length - 1][col]; // set spare piece to last one on col
     for (let i = this.board.length - 1; i > 0; i--) {
@@ -123,9 +125,11 @@ function ShiftColDown(col) {
             player.y = player.y.mod(7);
         }
     }
+    this.boardShifted = true;
 }
 
 function ShiftColUp(col) {
+    if (this.boardShifted) return;  
     sparePieceTemp = this.sparePiece; // save current spare piece
     this.sparePiece = this.board[0][col]; // set spare piece to last one on col
     for (let i = 0; i < this.board.length - 1; i++) {
@@ -140,9 +144,11 @@ function ShiftColUp(col) {
             player.y = player.y.mod(7);
         }
     }
+    this.boardShifted = true;
 }
 
 function ShiftRowRight(row) {
+    if (this.boardShifted) return;  
     sparePieceTemp = this.sparePiece; // save current spare piece
     this.sparePiece = this.board[row][this.board.length - 1]; // set spare piece to last one on col
     for (let i = this.board.length - 1; i > 0; i--) {
@@ -157,10 +163,12 @@ function ShiftRowRight(row) {
             player.x = player.x.mod(7);
         }
     }
+    this.boardShifted = true;
 }
 
 
 function ShiftRowLeft(row) {
+    if (this.boardShifted) return;  
     sparePieceTemp = this.sparePiece; // save current spare piece
     this.sparePiece = this.board[row][0]; // set spare piece to last one on col
     for (let i = 0; i < this.board.length - 1; i++) {
@@ -175,6 +183,7 @@ function ShiftRowLeft(row) {
             player.x = player.x.mod(7);
         }
     }
+    this.boardShifted = true;
 }
 
 module.exports = Board;
