@@ -126,6 +126,7 @@ io.sockets.on('connection', client => {
         const roomName = clientRooms[client.id];
         let player = gameRooms[roomName].playerList[client.id];
         if (gameRooms[roomName].playerTurn != client.id) return;
+        if (!ValidMove(gameRooms[roomName].board, player, data.inputId)) return;
         if (data.inputId === 'left')
             player.MoveLeft();
         else if (data.inputId === 'right')
@@ -146,6 +147,38 @@ io.sockets.on('connection', client => {
     });
 
 }); 
+
+function ValidMove(board, player, direction) {
+    let result = false;
+    const x = player.x;
+    const y = player.y;
+    const currentTile = board[y][x];
+    if (direction == 'up') {
+        if (y == 0) return;
+        const targetTile = board[y-1][x];
+        if (currentTile.allowedDirections[0] == 1 && targetTile.allowedDirections[2] == 1)
+            result = true;
+    } 
+    else if (direction == 'right') {
+        if (x == 6) return;
+        const targetTile = board[y][x+1];
+        if (currentTile.allowedDirections[1] == 1 && targetTile.allowedDirections[3] == 1)
+            result = true;
+    } 
+    else if (direction == 'down') {
+        if (y == 6) return;
+        const targetTile = board[y+1][x];
+        if (currentTile.allowedDirections[2] == 1 && targetTile.allowedDirections[0] == 1)
+            result = true;
+    }
+    else if (direction == 'left') {
+        if (x == 0) return;
+        const targetTile = board[y][x-1];
+        if (currentTile.allowedDirections[3] == 1 && targetTile.allowedDirections[1] == 1)
+            result = true;
+    }
+    return result;
+}
 
 function startGameInterval(roomName) {
     const intervalID = setInterval(() => {

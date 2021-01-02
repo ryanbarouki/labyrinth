@@ -3,14 +3,14 @@ const {shuffle} = require('./utils.js');
 const Card = require("./card.js");
 
 let Board = function () {
-    const board = [[new Tile(0,0), new Tile(1), new Tile(2), new Tile(3), new Tile(4), new Tile(5), new Tile(6,1)],
-    [new Tile(7), new Tile(8), new Tile(9), new Tile(10), new Tile(11), new Tile(12), new Tile(13)],
-    [new Tile(14), new Tile(15), new Tile(16), new Tile(17), new Tile(18), new Tile(19), new Tile(20)],
-    [new Tile(21), new Tile(22), new Tile(23), new Tile(24), new Tile(25), new Tile(26), new Tile(27)],
-    [new Tile(28), new Tile(29), new Tile(30), new Tile(31), new Tile(32), new Tile(33), new Tile(34)],
-    [new Tile(35), new Tile(36), new Tile(37), new Tile(38), new Tile(39), new Tile(40), new Tile(41)],
-    [new Tile(42,3), new Tile(43), new Tile(44), new Tile(45), new Tile(46), new Tile(47), new Tile(48,2)]]
-    const sparePiece = new Tile(49);
+    const board = [[new Tile(0, [0,1,1,0], 0), new Tile(1, [1,0,0,1]), new Tile(2, [0,1,1,1]), new Tile(3, [1,0,1,0]), new Tile(4, [0,1,1,1]), new Tile(5, [0,1,1,0]), new Tile(6,[0,1,1,0],1)],
+    [new Tile(7, [0,1,1,1]), new Tile(8, [1,0,1,0]), new Tile(9, [1,0,1,0]), new Tile(10,[1,0,1,0]), new Tile(11,[1,0,1,0]), new Tile(12, [1,0,1,1]), new Tile(13,[1,0,1,0])],
+    [new Tile(14, [1,1,1,0]), new Tile(15, [1,0,1,1]), new Tile(16, [1,1,1,0]), new Tile(17, [0,1,1,0]), new Tile(18,[0,1,1,1]), new Tile(19,[0,1,1,0]), new Tile(20, [1,0,1,1])],
+    [new Tile(21, [0,1,1,0]), new Tile(22,[1,0,1,1]), new Tile(23,[1,0,0,1]), new Tile(24,[0,1,1,0]), new Tile(25,[1,0,1,0]), new Tile(26,[0,1,1,0]), new Tile(27,[1,0,1,1])],
+    [new Tile(28,[1,1,1,0]), new Tile(29,[1,0,1,0]), new Tile(30,[1,1,0,1]), new Tile(31,[0,0,1,1]), new Tile(32,[1,0,1,1]), new Tile(33,[1,0,1,0]), new Tile(34,[1,0,1,1])],
+    [new Tile(35,[1,0,1,0]), new Tile(36,[1,0,0,1]), new Tile(37,[1,0,1,0]), new Tile(38,[0,1,1,0]), new Tile(39,[0,1,1,0]), new Tile(40,[1,0,1,0]), new Tile(41,[1,0,1,1])],
+    [new Tile(42,[0,1,1,0],3), new Tile(43,[0,0,1,1]), new Tile(44,[1,1,0,1]), new Tile(45,[1,0,1,0]), new Tile(46,[1,1,0,1]), new Tile(47,[0,1,1,0]), new Tile(48,[0,1,1,0],2)]]
+    const sparePiece = new Tile(49,[1,0,0,1]);
     let cards = [new Card(1), new Card(2), new Card(4), new Card(7), new Card(12), new Card(14),
                    new Card(15), new Card(16), new Card(18), new Card(20), new Card(22), new Card(23),
                    new Card(27), new Card(28), new Card(30), new Card(31), new Card(32), new Card(34),
@@ -56,16 +56,17 @@ let Board = function () {
     self.RotateSparePiece = function () {
         this.sparePiece.rotation++
         this.sparePiece.rotation = this.sparePiece.rotation.mod(4);
+        this.sparePiece.UpdateAllowedDirections();
     }
 
     self.InitialiseBoard = function(board) {
         let flatBoard = [].concat(...board);
         flatBoard.push(this.sparePiece); // add the spare tile to be shuffled
 
-        const fixed = {0:new Tile(0,0),
-                       6:new Tile(6,1),
-                       42:new Tile(42,3),
-                       48:new Tile(48,2)};
+        const fixed = {0:new Tile(0,[0,1,1,0],0),
+                       6:new Tile(6,[0,1,1,0],1),
+                       42:new Tile(42,[0,1,1,0],3),
+                       48:new Tile(48,[0,1,1,0],2)};
 
         flatBoard = flatBoard.filter(tile => {return !(Object.keys(fixed).includes(String(tile.id)))});
         flatBoard = shuffle(flatBoard);
