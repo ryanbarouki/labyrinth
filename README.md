@@ -2,8 +2,8 @@
 An online version of the popular board game Labyrinth
 
 # TODO
-- count points when end turn 
-- declare winner and end game
+- make sure game stops running when game ends
+- custom names
 - one tile slot per move
 - make mobile friendly
 - manage deletion of game rooms
@@ -12,3 +12,6 @@ An online version of the popular board game Labyrinth
 - ~~cards of target treasure~~
 - ~~make a waiting lobby before game starts~~
 - ~~player turn enforcement~~
+- ~~count points when end turn~~ 
+- ~~declare winner and end game~~
+- ~~added score board~~

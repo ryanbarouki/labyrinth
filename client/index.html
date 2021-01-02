@@ -54,10 +54,22 @@
         </div>
     </div>
 
-    <main id="gameScreen">
+    <div class="container h-100">
+        <div id="endGameScreen" class="h-100">
+            <div class="d-flex flex-column align-items-center justify-content-center h-100">
+                <h1>
+                    <img id="logo" src="./client/img/Labyrinth_Main_Logo.png" alt="">
+                </h1>
+                <h3><span id="winnerDisplay"></span></h3>
+          </div>
+        </div>
+    </div>
+<main id="gameScreen">
+    <div class="row">
         <div class="container">
             <img id="logo" src="./client/img/Labyrinth_Main_Logo.png" alt="">
         </div>
+    <div class="col-8">
         <h3>Click to rotate spare tile:</h3>
         <div class="notfixed-tiles spare-tile"></div>
         <table>
@@ -161,19 +173,29 @@
                 <td class="outercol"></td>
             </tr>
         </table>
+    </div>
+    <div class="col-4">
         <div class="d-flex flex-column align-items-center justify-content-center h-100">
-            <h3>Make your way to: </h3>
-            <div class="notfixed-tiles targetCard"> 
-        </div>
             <div>
-                <button type="submit"
-            class="btn btn-success" id="nextCardBtn">Next Card</button>
-                <button type="submit"
-            class="btn btn-info" id="endTurnBtn">End Turn</button>
-            </div>
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Turn</th>
+                    <th scope="col">Player</th>
+                    <th scope="col">Score</th>
+                    <th scope="col">Target Tile</th>
+                  </tr>
+                </thead>
+                <tbody id="scoreBoard">
+                </tbody>
+              </table>
+              </div>
+        <div>
+            <button type="submit"
+        class="btn btn-info" id="endTurnBtn">End Turn</button>
         </div>
-    </main>
-
+    </div>
+</main>
     <!-- <script src="https://cdn.socket.io/socket.io-3.0.1.min.js"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/socket.io-client@3.0.1/dist/socket.io.min.js"></script>
     <script src="/client/index_client.js"></script>

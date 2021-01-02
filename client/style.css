@@ -21,6 +21,11 @@ td {
     width: 80px;
     height: 80px;
     border-radius: 15%;
+    color: #fff;
+}
+
+th {
+    color: #fff;
 }
 
 h3 {
@@ -99,6 +104,10 @@ p {
 }
 
 #lobby {
+    display: none;
+}
+
+#endGameScreen {
     display: none;
 }
 

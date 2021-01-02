@@ -32,6 +32,11 @@ io.sockets.on('connection', client => {
 
     function handleEndTurn(roomName) {
         gameRooms[roomName].NextTurn();
+        const result = gameRooms[roomName].Score(client.id);
+        const player = gameRooms[roomName].playerList[client.id]
+        if (result == 1)
+            io.sockets.in(roomName).emit('endGame', JSON.stringify({player}));
+
     }
     
     function handleStartGame(roomName) {
@@ -112,16 +117,6 @@ io.sockets.on('connection', client => {
         if (gameRooms[roomName].playerTurn != client.id) return;
         gameRooms[roomName].RotateSparePiece();
     });
-
-
-    // THIS WILL BE REMOVED WHEN AUTO CHECKING IS DONE
-    client.on('nextCard', () => {
-        const roomName = clientRooms[client.id];
-        if (gameRooms[roomName].playerTurn != client.id) return;
-        let cards = gameRooms[roomName].playerList[client.id].cards;
-        if(cards.length > 0)
-            cards.splice(0,1);
-    })
 
     client.on('keyPress', data => {
         const roomName = clientRooms[client.id];

@@ -27,6 +27,25 @@ let Board = function () {
         playerTurn: ""
     };
 
+    self.Score = function(id) {
+        const player = this.playerList[id];
+        const x = player.x;
+        const y = player.y;
+        let cards = player.cards;
+        const card = cards[0];
+        const tile = this.board[y][x];
+        if (tile.id == card.id) {
+            if(cards.length > 0){
+                cards.splice(0,1);
+            }
+            if (cards.length == 0) {
+                return 1;
+            }
+            player.score++;
+            return 0;
+        }
+    }
+
     self.NextTurn = function() {
         let playerIds = Object.keys(this.playerList)
         const indexOfCurrentPlayer = playerIds.indexOf(this.playerTurn);
