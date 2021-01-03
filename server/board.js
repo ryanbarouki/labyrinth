@@ -45,6 +45,7 @@ let Board = function () {
             player.score++;
             return 0;
         }
+        return 0;
     }
 
     self.NextTurn = function() {

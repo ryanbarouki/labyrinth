@@ -39,7 +39,7 @@ socket.on('endGame', (package) => {
     let winner = package.player;
     gameScreen.style.display = "none";
     endGameScreen.style.display = "block";
-    winnerDisplay.innerText = `Player ${winner.playerNumber} wins!`
+    winnerDisplay.innerText = `Player ${winner.playerName} wins!`
 })
 
 socket.on('newPositions', package => {

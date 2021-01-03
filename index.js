@@ -24,19 +24,22 @@ const gameRooms = {};
 const io = require('socket.io')(serv,{});
 io.sockets.on('connection', client => {
     console.log('socket connection');
-    
+
     client.on('newGame', handleNewGame);
     client.on('joinGame', handleJoinGame);
     client.on('startGameBtn', handleStartGame);
     client.on('endTurn', handleEndTurn);
 
     function handleEndTurn(roomName) {
+        if (!gameRooms[roomName]) return;
         gameRooms[roomName].NextTurn();
         const result = gameRooms[roomName].Score(client.id);
         const player = gameRooms[roomName].playerList[client.id]
         gameRooms[roomName].boardShifted = false; // to allow board to move on next turn
-        if (result == 1)
+        if (result == 1) {
             io.sockets.in(roomName).emit('endGame', JSON.stringify({player}));
+            clearInterval(intervalID); //stop game sending data to clients
+        }
 
     }
     
@@ -98,33 +101,39 @@ io.sockets.on('connection', client => {
     // updating the board
     client.on('colShiftDown', col => {
         const roomName = clientRooms[client.id];
+        if (!gameRooms[roomName]) return;
         if (gameRooms[roomName].playerTurn != client.id) return;
         gameRooms[roomName].ShiftColDown(col);
     });
     client.on('colShiftUp', col => {
         const roomName = clientRooms[client.id];
+        if (!gameRooms[roomName]) return;
         if (gameRooms[roomName].playerTurn != client.id) return;
         gameRooms[roomName].ShiftColUp(col);
     });
     client.on('rowShiftRight', row => {
         const roomName = clientRooms[client.id];
+        if (!gameRooms[roomName]) return;
         if (gameRooms[roomName].playerTurn != client.id) return;
         gameRooms[roomName].ShiftRowRight(row);
     });
     client.on('rowShiftLeft', row => {
         const roomName = clientRooms[client.id];
+        if (!gameRooms[roomName]) return;
         if (gameRooms[roomName].playerTurn != client.id) return;
         gameRooms[roomName].ShiftRowLeft(row);
     });
 
     client.on('rotate', () => {
         const roomName = clientRooms[client.id];
+        if (!gameRooms[roomName]) return;
         if (gameRooms[roomName].playerTurn != client.id) return;
         gameRooms[roomName].RotateSparePiece();
     });
 
     client.on('keyPress', data => {
         const roomName = clientRooms[client.id];
+        if (!gameRooms[roomName]) return;
         let player = gameRooms[roomName].playerList[client.id];
         if (gameRooms[roomName].playerTurn != client.id) return;
         if (!ValidMove(gameRooms[roomName], player, data.inputId)) return;
@@ -143,7 +152,13 @@ io.sockets.on('connection', client => {
         if (roomName) {
             // note that the room is not being deleted
             // want to delete the room when the host player has left
+            gameRooms[roomName].NextTurn();
             delete gameRooms[roomName].playerList[client.id];
+            if (Object.keys(gameRooms[roomName].playerList).length == 0) {
+                delete gameRooms[roomName];
+                delete clientRooms[client.id];
+                console.log(`room ${roomName} deleted`);
+            }
         }
     });
 
@@ -181,14 +196,15 @@ function ValidMove(gameBoard, player, direction) {
             result = true;
     }
     return result;
-}
+} 
 
+let intervalID;
 function startGameInterval(roomName) {
-    const intervalID = setInterval(() => {
+    intervalID = setInterval(() => {
         // send the board to the clients
         // GAME LOOP HERE
         const boardPack = gameRooms[roomName];
-
+        if (!boardPack) return;
         const players = gameRooms[roomName].playerList;
         for (let id in players){
             let player = players[id];
