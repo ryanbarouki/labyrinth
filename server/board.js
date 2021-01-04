@@ -18,6 +18,7 @@ let Board = function () {
     let self = {
         board:board,
         sparePiece:sparePiece,
+        sparePiecePreviousPos: [-1,-1],
         ShiftColDown: ShiftColDown,
         ShiftColUp: ShiftColUp,
         ShiftRowLeft: ShiftRowLeft,
@@ -112,8 +113,10 @@ Number.prototype.mod = function(n) {
 
 function ShiftColDown(col) {
     if (this.boardShifted) return;  
+    if (col == this.sparePiecePreviousPos[0] && 0 == this.sparePiecePreviousPos[1]) return;
     sparePieceTemp = this.sparePiece; // save current spare piece
     this.sparePiece = this.board[this.board.length - 1][col]; // set spare piece to last one on col
+    this.sparePiecePreviousPos = [col, this.board.length - 1] // save previous location of spare piece
     for (let i = this.board.length - 1; i > 0; i--) {
         this.board[i][col] = this.board[i-1][col];
     }
@@ -131,8 +134,10 @@ function ShiftColDown(col) {
 
 function ShiftColUp(col) {
     if (this.boardShifted) return;  
+    if (col == this.sparePiecePreviousPos[0] && this.board.length - 1 == this.sparePiecePreviousPos[1]) return;
     sparePieceTemp = this.sparePiece; // save current spare piece
     this.sparePiece = this.board[0][col]; // set spare piece to last one on col
+    this.sparePiecePreviousPos = [col, 0] // save previous location of spare piece
     for (let i = 0; i < this.board.length - 1; i++) {
         this.board[i][col] = this.board[i+1][col];
     }
@@ -149,9 +154,11 @@ function ShiftColUp(col) {
 }
 
 function ShiftRowRight(row) {
-    if (this.boardShifted) return;  
+    if (this.boardShifted) return; 
+    if (0 == this.sparePiecePreviousPos[0] && row == this.sparePiecePreviousPos[1]) return;
     sparePieceTemp = this.sparePiece; // save current spare piece
     this.sparePiece = this.board[row][this.board.length - 1]; // set spare piece to last one on col
+    this.sparePiecePreviousPos = [this.board.length - 1, row] // save previous location of spare piece
     for (let i = this.board.length - 1; i > 0; i--) {
         this.board[row][i] = this.board[row][i-1];
     }
@@ -170,8 +177,10 @@ function ShiftRowRight(row) {
 
 function ShiftRowLeft(row) {
     if (this.boardShifted) return;  
+    if (this.board.length - 1 == this.sparePiecePreviousPos[0] && row == this.sparePiecePreviousPos[1]) return;
     sparePieceTemp = this.sparePiece; // save current spare piece
     this.sparePiece = this.board[row][0]; // set spare piece to last one on col
+    this.sparePiecePreviousPos = [0, row] // save previous location of spare piece
     for (let i = 0; i < this.board.length - 1; i++) {
         this.board[row][i] = this.board[row][i+1];
     }
