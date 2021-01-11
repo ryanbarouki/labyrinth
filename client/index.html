@@ -4,11 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    <link rel="stylesheet" href="/client/style.css">
+    <!-- <link rel="stylesheet" href="/client/style.css"> -->
+    <link rel="stylesheet" href="/client/style_canvas.css">
     <title>Labyrinth</title>
 </head>
 <body>
-    <div class="container h-100">
+    <!-- <div class="container h-100">
         <div id="initialScreen" class="h-100">
             <div class="d-flex flex-column align-items-center justify-content-center h-100">
                 <h1>
@@ -36,9 +37,9 @@
               </button>
           </div>
         </div>
-    </div>
+    </div> -->
 
-    <div class="container h-100">
+    <!-- <div class="container h-100">
         <div id="lobby" class="h-100">
             <div class="d-flex flex-column align-items-center justify-content-center h-100">
                 <h1>
@@ -46,7 +47,6 @@
                 </h1>
                 <h3>Your game code is: <span id="gameCodeDisplay"></span></h3>
                 <div id="lobbyPlayers">
-                    <!-- players waiting in lobby here -->
                 </div>
               <button
                 type="submit"
@@ -56,9 +56,9 @@
               </button>
           </div>
         </div>
-    </div>
+    </div> -->
 
-    <div class="container h-100">
+    <!-- <div class="container h-100">
         <div id="endGameScreen" class="h-100">
             <div class="d-flex flex-column align-items-center justify-content-center h-100">
                 <h1>
@@ -67,8 +67,16 @@
                 <h3><span id="winnerDisplay"></span></h3>
           </div>
         </div>
+    </div> -->
+
+    <div class="container">
+        <canvas id="gameScreen" width="1000" height="800"></canvas>
     </div>
-<main id="gameScreen">
+    <div>
+        <button type="submit"
+    class="btn btn-info" id="endTurnBtn">End Turn</button>
+    </div>
+<!-- <main id="gameScreen">
     <div class="row">
         <div class="container">
             <img id="logo" src="./client/img/Labyrinth_Main_Logo.png" alt="">
@@ -199,9 +207,9 @@
         class="btn btn-info" id="endTurnBtn">End Turn</button>
         </div>
     </div>
-</main>
-    <!-- <script src="https://cdn.socket.io/socket.io-3.0.1.min.js"></script> -->
+</main> -->
     <script src="https://cdn.jsdelivr.net/npm/socket.io-client@3.0.1/dist/socket.io.min.js"></script>
-    <script src="/client/index_client.js"></script>
+    <script src="/client/classes.js"></script>
+    <script src="/client/index_client_canvas.js"></script>
     </body>
     </html>

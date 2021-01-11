@@ -39,7 +39,7 @@ socket.on('endGame', (package) => {
     let winner = package.player;
     gameScreen.style.display = "none";
     endGameScreen.style.display = "block";
-    winnerDisplay.innerText = `Player ${winner.playerName} wins!`
+    winnerDisplay.innerText = `${winner.playerName} wins!`
 })
 
 socket.on('newPositions', package => {
@@ -157,7 +157,6 @@ document.addEventListener('keyup', e => {
 })
 
 const arrows = document.querySelectorAll(".arrow");
-//const players = document.querySelectorAll(".player");
 
 function GiveArrowsEventListeners() {
     for (let i = 0; i < arrows.length; i++ ) {

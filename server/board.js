@@ -1,35 +1,40 @@
 const Tile = require('./tile.js');
 const {shuffle} = require('./utils.js');
 const Card = require("./card.js");
+const { TILE_SIZE, BOARD_SIZE, OFFSET } = require("./constants.js");
 
-let Board = function () {
-    const board = [[new Tile(0, [0,1,1,0], 0), new Tile(1, [1,0,0,1]), new Tile(2, [0,1,1,1]), new Tile(3, [1,0,1,0]), new Tile(4, [0,1,1,1]), new Tile(5, [0,1,1,0]), new Tile(6,[0,1,1,0],1)],
-    [new Tile(7, [0,1,1,1]), new Tile(8, [1,0,1,0]), new Tile(9, [1,0,1,0]), new Tile(10,[1,0,1,0]), new Tile(11,[1,0,1,0]), new Tile(12, [1,0,1,1]), new Tile(13,[1,0,1,0])],
-    [new Tile(14, [1,1,1,0]), new Tile(15, [1,0,1,1]), new Tile(16, [1,1,1,0]), new Tile(17, [0,1,1,0]), new Tile(18,[0,1,1,1]), new Tile(19,[0,1,1,0]), new Tile(20, [1,0,1,1])],
-    [new Tile(21, [0,1,1,0]), new Tile(22,[1,0,1,1]), new Tile(23,[1,0,0,1]), new Tile(24,[0,1,1,0]), new Tile(25,[1,0,1,0]), new Tile(26,[0,1,1,0]), new Tile(27,[1,0,1,1])],
-    [new Tile(28,[1,1,1,0]), new Tile(29,[1,0,1,0]), new Tile(30,[1,1,0,1]), new Tile(31,[0,0,1,1]), new Tile(32,[1,0,1,1]), new Tile(33,[1,0,1,0]), new Tile(34,[1,0,1,1])],
-    [new Tile(35,[1,0,1,0]), new Tile(36,[1,0,0,1]), new Tile(37,[1,0,1,0]), new Tile(38,[0,1,1,0]), new Tile(39,[0,1,1,0]), new Tile(40,[1,0,1,0]), new Tile(41,[1,0,1,1])],
-    [new Tile(42,[0,1,1,0],3), new Tile(43,[0,0,1,1]), new Tile(44,[1,1,0,1]), new Tile(45,[1,0,1,0]), new Tile(46,[1,1,0,1]), new Tile(47,[0,1,1,0]), new Tile(48,[0,1,1,0],2)]]
-    const sparePiece = new Tile(49,[1,0,0,1]);
-    let cards = [new Card(1), new Card(2), new Card(4), new Card(7), new Card(12), new Card(14),
-                   new Card(15), new Card(16), new Card(18), new Card(20), new Card(22), new Card(23),
-                   new Card(27), new Card(28), new Card(30), new Card(31), new Card(32), new Card(34),
-                   new Card(36), new Card(41), new Card(43), new Card(44), new Card(46), new Card(49)];
-    let self = {
-        board:board,
-        sparePiece:sparePiece,
-        sparePiecePreviousPos: [-1,-1],
-        ShiftColDown: ShiftColDown,
-        ShiftColUp: ShiftColUp,
-        ShiftRowLeft: ShiftRowLeft,
-        ShiftRowRight: ShiftRowRight,
-        playerList: {},
-        gameHasStarted: false,
-        playerTurn: "",
-        boardShifted: false
-    };
+class Board {
+    constructor() {
+        const board = [[new Tile(0, [0,1,1,0], 0, 1), new Tile(1, [1,0,0,1], 0), new Tile(2, [0,1,1,1], 2), new Tile(3, [1,0,1,0], 1), new Tile(4, [0,1,1,1], 2), new Tile(5, [0,1,1,0], 0), new Tile(6,[0,1,1,0], 0, 2)],
+        [new Tile(7, [0,1,1,1], 2), new Tile(8, [1,0,1,0], 1), new Tile(9, [1,0,1,0], 1), new Tile(10,[1,0,1,0], 1), new Tile(11,[1,0,1,0], 1), new Tile(12, [1,0,1,1], 2), new Tile(13,[1,0,1,0], 1)],
+        [new Tile(14, [1,1,1,0], 2), new Tile(15, [1,0,1,1], 2), new Tile(16, [1,1,1,0], 2), new Tile(17, [0,1,1,0], 0), new Tile(18,[0,1,1,1], 2), new Tile(19,[0,1,1,0], 0), new Tile(20, [1,0,1,1], 2)],
+        [new Tile(21, [0,1,1,0], 0), new Tile(22,[1,0,1,1], 2), new Tile(23,[1,0,0,1], 0), new Tile(24,[0,1,1,0], 0), new Tile(25,[1,0,1,0], 1), new Tile(26,[0,1,1,0], 0), new Tile(27,[1,0,1,1], 2)],
+        [new Tile(28,[1,1,1,0], 2), new Tile(29,[1,0,1,0], 1), new Tile(30,[1,1,0,1], 2), new Tile(31,[0,0,1,1], 0), new Tile(32,[1,0,1,1], 2), new Tile(33,[1,0,1,0], 1), new Tile(34,[1,0,1,1], 2)],
+        [new Tile(35,[1,0,1,0], 1), new Tile(36,[1,0,0,1], 0), new Tile(37,[1,0,1,0], 1), new Tile(38,[0,1,1,0], 0), new Tile(39,[0,1,1,0], 0), new Tile(40,[1,0,1,0], 1), new Tile(41,[1,0,1,1], 2)],
+        [new Tile(42,[0,1,1,0], 0, 0), new Tile(43,[0,0,1,1], 0), new Tile(44,[1,1,0,1], 2), new Tile(45,[1,0,1,0], 1), new Tile(46,[1,1,0,1], 2), new Tile(47,[0,1,1,0], 0), new Tile(48,[0,1,1,0],0,3)]]
+        const sparePiece = new Tile(49,[1,0,0,1], 0);
+        const cards = [new Card(1), new Card(2), new Card(4), new Card(7), new Card(12), new Card(14),
+                    new Card(15), new Card(16), new Card(18), new Card(20), new Card(22), new Card(23),
+                    new Card(27), new Card(28), new Card(30), new Card(31), new Card(32), new Card(34),
+                    new Card(36), new Card(41), new Card(43), new Card(44), new Card(46), new Card(49)];
+        this.board = board
+        this.cards = cards;
+        this.sparePiece = sparePiece;
+        this.sparePiecePreviousPos =  [-1,-1];
+        this.playerList =  {};
+        this.gameHasStarted =  false;
+        this.playerTurn =  "";
+        this.boardShifted =  false;
+        this.amountShifted =  1000;
+        this.amountRotated = 0;
+        this.slideColDown =  {1:false, 3:false, 5:false};
+        this.slideColUp =  {1:false, 3:false, 5:false};
+        this.slideRowRight =  {1:false, 3:false, 5:false};
+        this.slideRowLeft =  {1:false, 3:false, 5:false};
+        this.board = this.InitialiseBoard();
+    }
 
-    self.Score = function(id) {
+    Score(id) {
         const player = this.playerList[id];
         const x = player.x;
         const y = player.y;
@@ -49,27 +54,27 @@ let Board = function () {
         return 0;
     }
 
-    self.NextTurn = function() {
+    NextTurn() {
         let playerIds = Object.keys(this.playerList)
         const indexOfCurrentPlayer = playerIds.indexOf(this.playerTurn);
         let indexOfNextPlayer = (indexOfCurrentPlayer + 1).mod(playerIds.length);
         this.playerTurn = playerIds[indexOfNextPlayer];
     }
     
-    self.RotateSparePiece = function () {
+    RotateSparePiece() {
         this.sparePiece.rotation++
         this.sparePiece.rotation = this.sparePiece.rotation.mod(4);
         this.sparePiece.UpdateAllowedDirections();
     }
 
-    self.InitialiseBoard = function(board) {
-        let flatBoard = [].concat(...board);
+    InitialiseBoard() {
+        let flatBoard = [].concat(...this.board);
         flatBoard.push(this.sparePiece); // add the spare tile to be shuffled
 
-        const fixed = {0:new Tile(0,[0,1,1,0],0),
-                       6:new Tile(6,[0,1,1,0],1),
-                       42:new Tile(42,[0,1,1,0],3),
-                       48:new Tile(48,[0,1,1,0],2)};
+        const fixed = {0:new Tile(0,[0,1,1,0], 0, 1),
+                       6:new Tile(6,[0,1,1,0], 0, 2),
+                       42:new Tile(42,[0,1,1,0], 0, 0),
+                       48:new Tile(48,[0,1,1,0], 0, 3)};
 
         flatBoard = flatBoard.filter(tile => {return !(Object.keys(fixed).includes(String(tile.id)))});
         flatBoard = shuffle(flatBoard);
@@ -85,10 +90,23 @@ let Board = function () {
 
         const newBoard = [];
         while(flatBoard.length) newBoard.push(flatBoard.splice(0,7));
+        this.InitialiseTileXY(newBoard);
         return newBoard;
     }
 
-    self.DealCards = function() {
+    InitialiseTileXY(board) {
+        for(let i = 0; i < board.length; i++) {
+            for(let j = 0; j < board.length; j++) {
+                board[i][j].x = j * TILE_SIZE + OFFSET;
+                board[i][j].y = i * TILE_SIZE + OFFSET;
+            }
+        }
+        // spare piece position
+        this.sparePiece.x = OFFSET + 9 * TILE_SIZE;
+        this.sparePiece.y = OFFSET;
+    }
+
+    DealCards() {
         if (this.playerList == {}) return;
 
         let numPlayers = Object.keys(this.playerList).length;
@@ -102,98 +120,118 @@ let Board = function () {
         }
     }
 
-    self.board = self.InitialiseBoard(board);
-
-    return self;
+    SetSparePiecePosition() {
+        this.sparePiece.x = OFFSET + 9 * TILE_SIZE;
+        this.sparePiece.y = OFFSET;
+    }
+    ShiftColDown(col) {
+        if (this.boardShifted) return;  
+        if (col == this.sparePiecePreviousPos[0] && 0 == this.sparePiecePreviousPos[1]) return;   
+        this.sparePiece.y = this.board[0][col].y - TILE_SIZE;
+        this.sparePiece.x = this.board[0][col].x;
+        const sparePieceTemp = this.sparePiece; // save current spare piece
+        this.sparePiece = this.board[this.board.length - 1][col]; // set spare piece to last one on col
+        this.SetSparePiecePosition();
+        this.sparePiecePreviousPos = [col, this.board.length - 1] // save previous location of spare piece
+        for (let i = this.board.length - 1; i > 0; i--) {
+            this.board[i][col] = this.board[i-1][col];
+        }
+        this.board[0][col] = sparePieceTemp; // set first piece to original spare piece
+        // move pieces if they are on the col
+        for (let i in this.playerList) {
+            let player = this.playerList[i];
+            if (player.x == col) {
+                player.y++;
+                player.y = player.y.mod(7);
+            }
+        }
+        this.boardShifted = true;
+        this.slideColDown[col] = true;
+        this.amountShifted = 0;
+    }
+    
+    ShiftColUp(col) {
+        if (this.boardShifted) return;  
+        if (col == this.sparePiecePreviousPos[0] && this.board.length - 1 == this.sparePiecePreviousPos[1]) return;
+        this.sparePiece.y = this.board[this.board.length - 1][col].y + TILE_SIZE;
+        this.sparePiece.x = this.board[this.board.length - 1][col].x;
+        const sparePieceTemp = this.sparePiece; // save current spare piece
+        this.sparePiece = this.board[0][col]; // set spare piece to first one on col
+        this.SetSparePiecePosition();
+        this.sparePiecePreviousPos = [col, 0] // save previous location of spare piece
+        for (let i = 0; i < this.board.length - 1; i++) {
+            this.board[i][col] = this.board[i+1][col];
+        }
+        this.board[this.board.length - 1][col] = sparePieceTemp; // set first piece to original spare piece
+        // move pieces if they are on the col
+        for (let i in this.playerList) {
+            let player = this.playerList[i];
+            if (player.x == col) {
+                player.y--;
+                player.y = player.y.mod(7);
+            }
+        }
+        this.boardShifted = true;
+        this.slideColUp[col] = true;
+        this.amountShifted = 0;
+    }
+    
+    ShiftRowRight(row) {
+        if (this.boardShifted) return; 
+        if (0 == this.sparePiecePreviousPos[0] && row == this.sparePiecePreviousPos[1]) return;
+        this.sparePiece.x = this.board[row][0].x - TILE_SIZE;
+        this.sparePiece.y = this.board[row][0].y;
+        const sparePieceTemp = this.sparePiece; // save current spare piece
+        this.sparePiece = this.board[row][this.board.length - 1]; // set spare piece to last one on col
+        this.SetSparePiecePosition();
+        this.sparePiecePreviousPos = [this.board.length - 1, row] // save previous location of spare piece
+        for (let i = this.board.length - 1; i > 0; i--) {
+            this.board[row][i] = this.board[row][i-1];
+        }
+        this.board[row][0] = sparePieceTemp; // set first piece to original spare piece
+        // move pieces if they are on the row
+        for (let i in this.playerList) {
+            let player = this.playerList[i];
+            if (player.y == row) {
+                player.x++;
+                player.x = player.x.mod(7);
+            }
+        }
+        this.boardShifted = true;
+        this.slideRowRight[row] = true;
+        this.amountShifted = 0;
+    }
+    
+    
+    ShiftRowLeft(row) {
+        if (this.boardShifted) return;  
+        if (this.board.length - 1 == this.sparePiecePreviousPos[0] && row == this.sparePiecePreviousPos[1]) return;
+        this.sparePiece.x = this.board[row][this.board.length - 1].x + TILE_SIZE;
+        this.sparePiece.y = this.board[row][this.board.length - 1].y;
+        const sparePieceTemp = this.sparePiece; // save current spare piece
+        this.sparePiece = this.board[row][0]; // set spare piece to last one on col
+        this.SetSparePiecePosition();
+        this.sparePiecePreviousPos = [0, row] // save previous location of spare piece
+        for (let i = 0; i < this.board.length - 1; i++) {
+            this.board[row][i] = this.board[row][i+1];
+        }
+        this.board[row][this.board.length - 1] = sparePieceTemp; // set first piece to original spare piece
+        // move pieces if they are on the row
+        for (let i in this.playerList) {
+            let player = this.playerList[i];
+            if (player.y == row) {
+                player.x--;
+                player.x = player.x.mod(7);
+            }
+        }
+        this.boardShifted = true;
+        this.slideRowLeft[row] = true;
+        this.amountShifted = 0;
+    }
 }
 
 Number.prototype.mod = function(n) {
     return ((this%n)+n)%n;
 };
 
-function ShiftColDown(col) {
-    if (this.boardShifted) return;  
-    if (col == this.sparePiecePreviousPos[0] && 0 == this.sparePiecePreviousPos[1]) return;
-    sparePieceTemp = this.sparePiece; // save current spare piece
-    this.sparePiece = this.board[this.board.length - 1][col]; // set spare piece to last one on col
-    this.sparePiecePreviousPos = [col, this.board.length - 1] // save previous location of spare piece
-    for (let i = this.board.length - 1; i > 0; i--) {
-        this.board[i][col] = this.board[i-1][col];
-    }
-    this.board[0][col] = sparePieceTemp; // set first piece to original spare piece
-    // move pieces if they are on the col
-    for (let i in this.playerList) {
-        let player = this.playerList[i];
-        if (player.x == col) {
-            player.y++;
-            player.y = player.y.mod(7);
-        }
-    }
-    this.boardShifted = true;
-}
-
-function ShiftColUp(col) {
-    if (this.boardShifted) return;  
-    if (col == this.sparePiecePreviousPos[0] && this.board.length - 1 == this.sparePiecePreviousPos[1]) return;
-    sparePieceTemp = this.sparePiece; // save current spare piece
-    this.sparePiece = this.board[0][col]; // set spare piece to last one on col
-    this.sparePiecePreviousPos = [col, 0] // save previous location of spare piece
-    for (let i = 0; i < this.board.length - 1; i++) {
-        this.board[i][col] = this.board[i+1][col];
-    }
-    this.board[this.board.length - 1][col] = sparePieceTemp; // set first piece to original spare piece
-    // move pieces if they are on the col
-    for (let i in this.playerList) {
-        let player = this.playerList[i];
-        if (player.x == col) {
-            player.y--;
-            player.y = player.y.mod(7);
-        }
-    }
-    this.boardShifted = true;
-}
-
-function ShiftRowRight(row) {
-    if (this.boardShifted) return; 
-    if (0 == this.sparePiecePreviousPos[0] && row == this.sparePiecePreviousPos[1]) return;
-    sparePieceTemp = this.sparePiece; // save current spare piece
-    this.sparePiece = this.board[row][this.board.length - 1]; // set spare piece to last one on col
-    this.sparePiecePreviousPos = [this.board.length - 1, row] // save previous location of spare piece
-    for (let i = this.board.length - 1; i > 0; i--) {
-        this.board[row][i] = this.board[row][i-1];
-    }
-    this.board[row][0] = sparePieceTemp; // set first piece to original spare piece
-    // move pieces if they are on the row
-    for (let i in this.playerList) {
-        let player = this.playerList[i];
-        if (player.y == row) {
-            player.x++;
-            player.x = player.x.mod(7);
-        }
-    }
-    this.boardShifted = true;
-}
-
-
-function ShiftRowLeft(row) {
-    if (this.boardShifted) return;  
-    if (this.board.length - 1 == this.sparePiecePreviousPos[0] && row == this.sparePiecePreviousPos[1]) return;
-    sparePieceTemp = this.sparePiece; // save current spare piece
-    this.sparePiece = this.board[row][0]; // set spare piece to last one on col
-    this.sparePiecePreviousPos = [0, row] // save previous location of spare piece
-    for (let i = 0; i < this.board.length - 1; i++) {
-        this.board[row][i] = this.board[row][i+1];
-    }
-    this.board[row][this.board.length - 1] = sparePieceTemp; // set first piece to original spare piece
-    // move pieces if they are on the row
-    for (let i in this.playerList) {
-        let player = this.playerList[i];
-        if (player.y == row) {
-            player.x--;
-            player.x = player.x.mod(7);
-        }
-    }
-    this.boardShifted = true;
-}
-
-module.exports = Board;
+module.exports = {Board, TILE_SIZE};

@@ -3,9 +3,10 @@ const app = express();
 const serv = require('http').Server(app);
 const PORT = process.env.PORT || 3000;
 const Player = require("./server/player.js"); // import the player class
-const Board = require("./server/board.js"); // import the board class
+const {Board} = require("./server/board.js"); // import the board class
 const {makeid} = require("./server/utils.js");
 const { GameLoop } = require("./server/game.js");
+const {FRAME_RATE} = require('./server/constants.js');
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + "/client/index.html");
@@ -29,17 +30,26 @@ io.sockets.on('connection', client => {
     client.on('joinGame', handleJoinGame);
     client.on('startGameBtn', handleStartGame);
     client.on('endTurn', handleEndTurn);
+    client.on('tempStart', () => {
+        let roomName = makeid(5);
+        clientRooms[client.id] = roomName;
+        gameRooms[roomName] = new Board();
+        client.join(roomName);
+        startGameInterval(roomName);
+        gameRooms[roomName].gameHasStarted = true;
+        client.emit('showLobby', JSON.stringify({roomName}));
+    })
 
     function handleEndTurn(roomName) {
         if (!gameRooms[roomName]) return;
         gameRooms[roomName].NextTurn();
-        const result = gameRooms[roomName].Score(client.id);
-        const player = gameRooms[roomName].playerList[client.id]
+        //const result = gameRooms[roomName].Score(client.id);
+        //const player = gameRooms[roomName].playerList[client.id]
         gameRooms[roomName].boardShifted = false; // to allow board to move on next turn
-        if (result == 1) {
-            io.sockets.in(roomName).emit('endGame', JSON.stringify({player}));
-            clearInterval(intervalID); //stop game sending data to clients
-        }
+        // if (result == 1) {
+        //     io.sockets.in(roomName).emit('endGame', JSON.stringify({player}));
+        //     clearInterval(intervalID); //stop game sending data to clients
+        // }
 
     }
     
@@ -102,25 +112,25 @@ io.sockets.on('connection', client => {
     client.on('colShiftDown', col => {
         const roomName = clientRooms[client.id];
         if (!gameRooms[roomName]) return;
-        if (gameRooms[roomName].playerTurn != client.id) return;
+        //if (gameRooms[roomName].playerTurn != client.id) return;
         gameRooms[roomName].ShiftColDown(col);
     });
     client.on('colShiftUp', col => {
         const roomName = clientRooms[client.id];
         if (!gameRooms[roomName]) return;
-        if (gameRooms[roomName].playerTurn != client.id) return;
+        //if (gameRooms[roomName].playerTurn != client.id) return;
         gameRooms[roomName].ShiftColUp(col);
     });
     client.on('rowShiftRight', row => {
         const roomName = clientRooms[client.id];
         if (!gameRooms[roomName]) return;
-        if (gameRooms[roomName].playerTurn != client.id) return;
+        //if (gameRooms[roomName].playerTurn != client.id) return;
         gameRooms[roomName].ShiftRowRight(row);
     });
     client.on('rowShiftLeft', row => {
         const roomName = clientRooms[client.id];
         if (!gameRooms[roomName]) return;
-        if (gameRooms[roomName].playerTurn != client.id) return;
+        //if (gameRooms[roomName].playerTurn != client.id) return;
         gameRooms[roomName].ShiftRowLeft(row);
     });
 
@@ -138,7 +148,7 @@ io.sockets.on('connection', client => {
         if (gameRooms[roomName].playerTurn != client.id) return;
         if (!ValidMove(gameRooms[roomName], player, data.inputId)) return;
         if (data.inputId === 'left')
-            player.MoveLeft();
+            player.MoveLeft(); 
         else if (data.inputId === 'right')
             player.MoveRight();
         else if (data.inputId === 'up')
@@ -203,7 +213,7 @@ function startGameInterval(roomName) {
     intervalID = setInterval(() => {
         // send the board to the clients
         // GAME LOOP HERE
-        const boardPack = gameRooms[roomName];
+        const boardPack = GameLoop(gameRooms[roomName]);
         if (!boardPack) return;
         const players = gameRooms[roomName].playerList;
         for (let id in players){
@@ -215,7 +225,7 @@ function startGameInterval(roomName) {
             // send cards to client individually
             io.to(id).emit('playerCards', JSON.stringify({cardPack, id}));
         }
-        io.sockets.in(roomName).emit('newPositions', JSON.stringify({boardPack}));
+        io.sockets.in(roomName).emit('gameState', JSON.stringify({boardPack}));
 
-    }, 1000/25);
+    }, 1000/FRAME_RATE);
 }
