@@ -12,7 +12,7 @@ class Tile {
     
     InitialiseAllowedDirections() {
         let arr = this.allowedDirections.slice();
-        arr = arr.concat(arr.splice(0,arr.length - this.rotation));
+        arr = arr.concat(arr.splice(0,arr.length - this.rotation / (Math.PI / 2)));
         this.allowedDirections = arr;
     }
     

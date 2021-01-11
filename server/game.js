@@ -62,9 +62,11 @@ function GameLoop(gameBoard) {
     }
 
     function rotateSpareTile() {
+        if (!gameBoard.rotate) return;
         gameBoard.amountRotated += ROTATE_SPEED;
         if (gameBoard.amountRotated > Math.PI / 2) {
             gameBoard.amountRotated = 0;
+            gameBoard.rotate = false;
             return;
         }
         gameBoard.sparePiece.rotation += ROTATE_SPEED;

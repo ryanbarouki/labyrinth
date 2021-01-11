@@ -31,6 +31,7 @@ class Board {
         this.slideColUp =  {1:false, 3:false, 5:false};
         this.slideRowRight =  {1:false, 3:false, 5:false};
         this.slideRowLeft =  {1:false, 3:false, 5:false};
+        this.rotate = false;
         this.board = this.InitialiseBoard();
     }
 
@@ -62,8 +63,9 @@ class Board {
     }
     
     RotateSparePiece() {
-        this.sparePiece.rotation++
-        this.sparePiece.rotation = this.sparePiece.rotation.mod(4);
+        // this.sparePiece.rotation++
+        // this.sparePiece.rotation = this.sparePiece.rotation.mod(4);
+        this.rotate = true;
         this.sparePiece.UpdateAllowedDirections();
     }
 

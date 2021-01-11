@@ -39,6 +39,7 @@ canvas.addEventListener('click', event => {
     }
     if (sparePiece.sprite.clicked(x,y)){
         console.log('clicked!');
+        socket.emit('rotate');
     }
 });
 

@@ -137,7 +137,7 @@ io.sockets.on('connection', client => {
     client.on('rotate', () => {
         const roomName = clientRooms[client.id];
         if (!gameRooms[roomName]) return;
-        if (gameRooms[roomName].playerTurn != client.id) return;
+        //if (gameRooms[roomName].playerTurn != client.id) return;
         gameRooms[roomName].RotateSparePiece();
     });
 
