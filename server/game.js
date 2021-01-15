@@ -81,13 +81,16 @@ function GameLoop(gameBoard) {
             player.x++; // update the discrete board position at the end of the move
             player.moveRight = false;
             player.amountMoved = 0;
-            player.frameY = 0;
+            // player.frameY = 0;
+            player.moving = false;
             return;
         }
 
         player.xCanvas += PLAYER_SPEED;
+        player.moving = true;
         player.amountMoved += PLAYER_SPEED;
         player.frameY = 2 * PLAYER_HEIGHT;
+        playerWalk(player);
     }
     function moveLeft() {
         const id = gameBoard.playerTurn;
@@ -97,11 +100,16 @@ function GameLoop(gameBoard) {
             player.x--; // update the discrete board position at the end of the move
             player.moveLeft = false;
             player.amountMoved = 0;
+            // player.frameY = 0;
+            player.moving = false;
             return;
         }
 
         player.xCanvas -= PLAYER_SPEED;
+        player.moving = true;
         player.amountMoved += PLAYER_SPEED;
+        player.frameY = PLAYER_HEIGHT;
+        playerWalk(player);
     }
 
     function moveUp() {
@@ -112,25 +120,38 @@ function GameLoop(gameBoard) {
             player.y--; // update the discrete board position at the end of the move
             player.moveUp = false;
             player.amountMoved = 0;
+            // player.frameY = 0;
+            player.moving = false;
             return;
         }
 
         player.yCanvas -= PLAYER_SPEED;
+        player.moving = true;
         player.amountMoved += PLAYER_SPEED;
+        player.frameY = 3 * PLAYER_HEIGHT;
+        playerWalk(player);
     }
     function moveDown() {
         const id = gameBoard.playerTurn;
         let player = gameBoard.playerList[id];
         if (!player.moveDown) return;
         if (player.amountMoved >= TILE_SIZE) {
-            player.x++; // update the discrete board position at the end of the move
+            player.y++; // update the discrete board position at the end of the move
             player.moveDown = false;
             player.amountMoved = 0;
+            player.moving = false;
             return;
         }
-
         player.yCanvas += PLAYER_SPEED;
+        player.moving = true;
         player.amountMoved += PLAYER_SPEED;
+        player.frameY = 0;
+        playerWalk(player);
+    }
+
+    function playerWalk(player) {
+        if (player.frameX < 3 * PLAYER_WIDTH && player.moving) player.frameX += PLAYER_WIDTH;
+        else player.frameX = 0;
     }
 
     for (let i = 1; i < 6; i+=2) {
@@ -141,8 +162,6 @@ function GameLoop(gameBoard) {
         SlideRowLeft(i);
     }
     rotateSpareTile();
-    const id = gameBoard.playerTurn;
-    let player = gameBoard.playerList[id];
     moveLeft();
     moveRight();
     moveUp();

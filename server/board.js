@@ -5,14 +5,14 @@ const { TILE_SIZE, BOARD_SIZE, OFFSET } = require("./constants.js");
 
 class Board {
     constructor() {
-        const board = [[new Tile(0, [0,1,1,0], 0, 1), new Tile(1, [1,0,0,1], 0), new Tile(2, [0,1,1,1], 2), new Tile(3, [1,0,1,0], 1), new Tile(4, [0,1,1,1], 2), new Tile(5, [0,1,1,0], 0), new Tile(6,[0,1,1,0], 0, 2)],
-        [new Tile(7, [0,1,1,1], 2), new Tile(8, [1,0,1,0], 1), new Tile(9, [1,0,1,0], 1), new Tile(10,[1,0,1,0], 1), new Tile(11,[1,0,1,0], 1), new Tile(12, [1,0,1,1], 2), new Tile(13,[1,0,1,0], 1)],
-        [new Tile(14, [1,1,1,0], 2), new Tile(15, [1,0,1,1], 2), new Tile(16, [1,1,1,0], 2), new Tile(17, [0,1,1,0], 0), new Tile(18,[0,1,1,1], 2), new Tile(19,[0,1,1,0], 0), new Tile(20, [1,0,1,1], 2)],
-        [new Tile(21, [0,1,1,0], 0), new Tile(22,[1,0,1,1], 2), new Tile(23,[1,0,0,1], 0), new Tile(24,[0,1,1,0], 0), new Tile(25,[1,0,1,0], 1), new Tile(26,[0,1,1,0], 0), new Tile(27,[1,0,1,1], 2)],
-        [new Tile(28,[1,1,1,0], 2), new Tile(29,[1,0,1,0], 1), new Tile(30,[1,1,0,1], 2), new Tile(31,[0,0,1,1], 0), new Tile(32,[1,0,1,1], 2), new Tile(33,[1,0,1,0], 1), new Tile(34,[1,0,1,1], 2)],
-        [new Tile(35,[1,0,1,0], 1), new Tile(36,[1,0,0,1], 0), new Tile(37,[1,0,1,0], 1), new Tile(38,[0,1,1,0], 0), new Tile(39,[0,1,1,0], 0), new Tile(40,[1,0,1,0], 1), new Tile(41,[1,0,1,1], 2)],
-        [new Tile(42,[0,1,1,0], 0, 0), new Tile(43,[0,0,1,1], 0), new Tile(44,[1,1,0,1], 2), new Tile(45,[1,0,1,0], 1), new Tile(46,[1,1,0,1], 2), new Tile(47,[0,1,1,0], 0), new Tile(48,[0,1,1,0],0,3)]]
-        const sparePiece = new Tile(49,[1,0,0,1], 0);
+        const board = [[new Tile(0, 0, 1), new Tile(1, 0), new Tile(2, 2), new Tile(3, 1), new Tile(4, 2), new Tile(5, 0), new Tile(6,0, 2)],
+        [new Tile(7, 2), new Tile(8, 1), new Tile(9, 1), new Tile(10,1), new Tile(11,1), new Tile(12, 2), new Tile(13,1)],
+        [new Tile(14, 2), new Tile(15, 2), new Tile(16, 2), new Tile(17, 0), new Tile(18,2), new Tile(19,0), new Tile(20, 2)],
+        [new Tile(21, 0), new Tile(22,2), new Tile(23,0), new Tile(24,0), new Tile(25,1), new Tile(26,0), new Tile(27,2)],
+        [new Tile(28,2), new Tile(29,1), new Tile(30,2), new Tile(31,0), new Tile(32,2), new Tile(33,1), new Tile(34,2)],
+        [new Tile(35,1), new Tile(36,0), new Tile(37,1), new Tile(38,0), new Tile(39,0), new Tile(40,1), new Tile(41,2)],
+        [new Tile(42,0, 0), new Tile(43,0), new Tile(44,2), new Tile(45,1), new Tile(46,2), new Tile(47,0), new Tile(48,0,3)]]
+        const sparePiece = new Tile(49,0);
         const cards = [new Card(1), new Card(2), new Card(4), new Card(7), new Card(12), new Card(14),
                     new Card(15), new Card(16), new Card(18), new Card(20), new Card(22), new Card(23),
                     new Card(27), new Card(28), new Card(30), new Card(31), new Card(32), new Card(34),
@@ -65,6 +65,7 @@ class Board {
     RotateSparePiece() {
         // this.sparePiece.rotation++
         // this.sparePiece.rotation = this.sparePiece.rotation.mod(4);
+        if (this.rotate) return;
         this.rotate = true;
         this.sparePiece.UpdateAllowedDirections();
     }
@@ -73,10 +74,10 @@ class Board {
         let flatBoard = [].concat(...this.board);
         flatBoard.push(this.sparePiece); // add the spare tile to be shuffled
 
-        const fixed = {0:new Tile(0,[0,1,1,0], 0, 1),
-                       6:new Tile(6,[0,1,1,0], 0, 2),
-                       42:new Tile(42,[0,1,1,0], 0, 0),
-                       48:new Tile(48,[0,1,1,0], 0, 3)};
+        const fixed = {0:new Tile(0,0, 1),
+                       6:new Tile(6,0, 2),
+                       42:new Tile(42,0, 0),
+                       48:new Tile(48,0, 3)};
 
         flatBoard = flatBoard.filter(tile => {return !(Object.keys(fixed).includes(String(tile.id)))});
         flatBoard = shuffle(flatBoard);

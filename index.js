@@ -139,7 +139,7 @@ io.sockets.on('connection', client => {
         if (!gameRooms[roomName]) return;
         let player = gameRooms[roomName].playerList[client.id];
         if (gameRooms[roomName].playerTurn != client.id) return;
-        // if (!ValidMove(gameRooms[roomName], player, data.inputId)) return;
+        if (!ValidMove(gameRooms[roomName], player, data.inputId)) return;
         if (data.inputId === 'left') {
             // this if is to only allow one movement direction at a time
             if(player.moveRight || player.moveUp || player.moveDown) return;
