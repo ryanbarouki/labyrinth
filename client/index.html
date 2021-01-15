@@ -9,7 +9,7 @@
     <title>Labyrinth</title>
 </head>
 <body>
-    <!-- <div class="container h-100">
+    <div class="container h-100">
         <div id="initialScreen" class="h-100">
             <div class="d-flex flex-column align-items-center justify-content-center h-100">
                 <h1>
@@ -37,9 +37,9 @@
               </button>
           </div>
         </div>
-    </div> -->
+    </div>
 
-    <!-- <div class="container h-100">
+    <div class="container h-100">
         <div id="lobby" class="h-100">
             <div class="d-flex flex-column align-items-center justify-content-center h-100">
                 <h1>
@@ -56,9 +56,9 @@
               </button>
           </div>
         </div>
-    </div> -->
+    </div>
 
-    <!-- <div class="container h-100">
+    <div class="container h-100">
         <div id="endGameScreen" class="h-100">
             <div class="d-flex flex-column align-items-center justify-content-center h-100">
                 <h1>
@@ -67,126 +67,17 @@
                 <h3><span id="winnerDisplay"></span></h3>
           </div>
         </div>
-    </div> -->
+    </div>
 
-    <div class="container">
-        <canvas id="gameScreen" width="1000" height="800"></canvas>
-    </div>
-    <div>
-        <button type="submit"
-    class="btn btn-info" id="endTurnBtn">End Turn</button>
-    </div>
-<!-- <main id="gameScreen">
-    <div class="row">
-        <div class="container">
-            <img id="logo" src="./client/img/Labyrinth_Main_Logo.png" alt="">
+    <div class="container" id="gameScreen">
+        <canvas id="gameCanvas" width="1000" height="800"></canvas>
+        <div>
+            <button type="submit"
+        class="btn btn-info" id="endTurnBtn">End Turn</button>
         </div>
-    <div class="col-8">
-        <h3>Click to rotate spare tile:</h3>
-        <div class="notfixed-tiles spare-tile"></div>
-        <table>
-            <tr class="outerrow">
-                <td class="outercol"></td>
-                <td class="outercol"></td>
-                <td class="outercol"><div class="arrow arrow-down col1-top"></div></td>
-                <td class="outercol"></td>
-                <td class="outercol"><div class="arrow arrow-down col2-top"></div></td>
-                <td class="outercol"></td>
-                <td class="outercol"><div class="arrow arrow-down col3-top"></div></td>
-                <td class="outercol"></td>
-                <td class="outercol"></td>
-            </tr>
-            <tr>
-                <td class="outercol"></td>
-                <td class="fixed inner empty"></td>
-                <td class="inner empty"></td>
-                <td class="fixed inner empty"></td>
-                <td class="inner empty"></td>
-                <td class="fixed inner empty"></td>
-                <td class="inner empty"></td>
-                <td class="fixed inner empty"></td>
-                <td class="outercol"></td>
-            </tr>
-            <tr>
-                <td class="outercol"><div class="arrow arrow-right row1-left"></div></td>
-                <td class="inner empty"></td>
-                <td class="inner empty"></td>
-                <td class="inner empty"></td>
-                <td class="inner empty"></td>
-                <td class="inner empty"></td>
-                <td class="inner empty"></td>
-                <td class="inner empty"></td>
-                <td class="outercol"><div class="arrow arrow-left row1-right"></div></td>
-            </tr>
-            <tr>
-                <td class="outercol"></td>
-                <td class="fixed inner empty"></td>
-                <td class="inner empty"></td>
-                <td class="fixed inner empty"></td>
-                <td class="inner empty"></td>
-                <td class="fixed inner empty"></td>
-                <td class="inner empty"></td>
-                <td class="fixed inner empty"></td>
-                <td class="outercol"></td>
-            </tr>
-            <tr>
-                <td class="outercol"><div class="arrow arrow-right row2-left"></div></td>
-                <td class="inner empty"></td>
-                <td class="inner empty"></td>
-                <td class="inner empty"></td>
-                <td class="inner empty"></td>
-                <td class="inner empty"></td>
-                <td class="inner empty"></td>
-                <td class="inner empty"></td>
-                <td class="outercol"><div class="arrow arrow-left row2-right"></div></td>
-            </tr>
-            <tr>
-                <td class="outercol"></td>
-                <td class="fixed inner empty"></td>
-                <td class="inner empty"></td>
-                <td class="fixed inner empty"></td>
-                <td class="inner empty"></td>
-                <td class="fixed inner empty"></td>
-                <td class="inner empty"></td>
-                <td class="fixed inner empty"></td>
-                <td class="outercol"></td>
-            </tr>
-            <tr>
-                <td class="outercol"><div class="arrow arrow-right row3-left"></div></td>
-                <td class="inner empty"></td>
-                <td class="inner empty"></td>
-                <td class="inner empty"></td>
-                <td class="inner empty"></td>
-                <td class="inner empty"></td>
-                <td class="inner empty"></td>
-                <td class="inner empty"></td>
-                <td class="outercol"><div class="arrow arrow-left row3-right"></div></td>
-            </tr>
-            <tr>
-                <td class="outercol"></td>
-                <td class="fixed inner empty"></td>
-                <td class="inner empty"></td>
-                <td class="fixed inner empty"></td>
-                <td class="inner empty"></td>
-                <td class="fixed inner empty"></td>
-                <td class="inner empty"></td>
-                <td class="fixed inner empty"></td>
-                <td class="outercol"></td>
-            </tr>
-            <tr class="outerrow">
-                <td class="outercol"></td>
-                <td class="outercol"></td>
-                <td class="outercol"><div class="arrow arrow-up col1-bottom"></div></td>
-                <td class="outercol"></td>
-                <td class="outercol"><div class="arrow arrow-up col2-bottom"></div></td>
-                <td class="outercol"></td>
-                <td class="outercol"><div class="arrow arrow-up col3-bottom"></div></td>
-                <td class="outercol"></td>
-                <td class="outercol"></td>
-            </tr>
-        </table>
     </div>
-    <div class="col-4">
+
+<!-- <div class="col-4">
         <div class="d-flex flex-column align-items-center justify-content-center h-100">
             <div>
             <table class="table">
@@ -206,9 +97,10 @@
             <button type="submit"
         class="btn btn-info" id="endTurnBtn">End Turn</button>
         </div>
-    </div>
-</main> -->
+    </div> -->
+
     <script src="https://cdn.jsdelivr.net/npm/socket.io-client@3.0.1/dist/socket.io.min.js"></script>
+    <script src="/client/functions.js"></script>
     <script src="/client/classes.js"></script>
     <script src="/client/index_client_canvas.js"></script>
     </body>

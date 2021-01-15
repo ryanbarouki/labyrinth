@@ -80,3 +80,14 @@ class TileSprite {
         return (xmouse > this.x && xmouse < this.x + TILE_SIZE && ymouse > this.y && ymouse < this.y + TILE_SIZE)
     }
 }
+
+class PlayerSprite {
+    constructor(x, y, ) {
+        this.x = x;
+        this.y = y;
+    }
+
+    draw(ctx, sprite) {
+        ctx.drawImage()
+    }
+}

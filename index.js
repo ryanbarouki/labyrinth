@@ -6,7 +6,7 @@ const Player = require("./server/player.js"); // import the player class
 const {Board} = require("./server/board.js"); // import the board class
 const {makeid} = require("./server/utils.js");
 const { GameLoop } = require("./server/game.js");
-const {FRAME_RATE} = require('./server/constants.js');
+const {FRAME_RATE, OFFSET, PLAYER_OFFSET_X, PLAYER_OFFSET_Y, TILE_SIZE} = require('./server/constants.js');
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + "/client/index.html");
@@ -30,15 +30,6 @@ io.sockets.on('connection', client => {
     client.on('joinGame', handleJoinGame);
     client.on('startGameBtn', handleStartGame);
     client.on('endTurn', handleEndTurn);
-    client.on('tempStart', () => {
-        let roomName = makeid(5);
-        clientRooms[client.id] = roomName;
-        gameRooms[roomName] = new Board();
-        client.join(roomName);
-        startGameInterval(roomName);
-        gameRooms[roomName].gameHasStarted = true;
-        client.emit('showLobby', JSON.stringify({roomName}));
-    })
 
     function handleEndTurn(roomName) {
         if (!gameRooms[roomName]) return;
@@ -104,7 +95,9 @@ io.sockets.on('connection', client => {
         let num = gameRooms[room].playerList != {} ? Object.keys(gameRooms[room].playerList).length : 0;
         const x = startingPos[num][0];
         const y = startingPos[num][1];
-        gameRooms[room].playerList[client.id] = new Player(client.id, x, y, num + 1);
+        const xCanvas = x * TILE_SIZE + PLAYER_OFFSET_X + OFFSET;
+        const yCanvas = y * TILE_SIZE + PLAYER_OFFSET_Y + OFFSET;
+        gameRooms[room].playerList[client.id] = new Player(client.id, x, y, xCanvas, yCanvas, num + 1);
         gameRooms[room].playerList[client.id].playerName = playerName;
         gameRooms[room].DealCards();
     }
@@ -112,32 +105,32 @@ io.sockets.on('connection', client => {
     client.on('colShiftDown', col => {
         const roomName = clientRooms[client.id];
         if (!gameRooms[roomName]) return;
-        //if (gameRooms[roomName].playerTurn != client.id) return;
+        if (gameRooms[roomName].playerTurn != client.id) return;
         gameRooms[roomName].ShiftColDown(col);
     });
     client.on('colShiftUp', col => {
         const roomName = clientRooms[client.id];
         if (!gameRooms[roomName]) return;
-        //if (gameRooms[roomName].playerTurn != client.id) return;
+        if (gameRooms[roomName].playerTurn != client.id) return;
         gameRooms[roomName].ShiftColUp(col);
     });
     client.on('rowShiftRight', row => {
         const roomName = clientRooms[client.id];
         if (!gameRooms[roomName]) return;
-        //if (gameRooms[roomName].playerTurn != client.id) return;
+        if (gameRooms[roomName].playerTurn != client.id) return;
         gameRooms[roomName].ShiftRowRight(row);
     });
     client.on('rowShiftLeft', row => {
         const roomName = clientRooms[client.id];
         if (!gameRooms[roomName]) return;
-        //if (gameRooms[roomName].playerTurn != client.id) return;
+        if (gameRooms[roomName].playerTurn != client.id) return;
         gameRooms[roomName].ShiftRowLeft(row);
     });
 
     client.on('rotate', () => {
         const roomName = clientRooms[client.id];
         if (!gameRooms[roomName]) return;
-        //if (gameRooms[roomName].playerTurn != client.id) return;
+        if (gameRooms[roomName].playerTurn != client.id) return;
         gameRooms[roomName].RotateSparePiece();
     });
 
@@ -146,15 +139,24 @@ io.sockets.on('connection', client => {
         if (!gameRooms[roomName]) return;
         let player = gameRooms[roomName].playerList[client.id];
         if (gameRooms[roomName].playerTurn != client.id) return;
-        if (!ValidMove(gameRooms[roomName], player, data.inputId)) return;
-        if (data.inputId === 'left')
-            player.MoveLeft(); 
-        else if (data.inputId === 'right')
-            player.MoveRight();
-        else if (data.inputId === 'up')
-            player.MoveUp();
-        else if (data.inputId === 'down')
-            player.MoveDown();
+        // if (!ValidMove(gameRooms[roomName], player, data.inputId)) return;
+        if (data.inputId === 'left') {
+            // this if is to only allow one movement direction at a time
+            if(player.moveRight || player.moveUp || player.moveDown) return;
+            player.moveLeft = true;
+        }
+        else if (data.inputId === 'right') {
+            if(player.moveLeft || player.moveUp || player.moveDown) return;
+            player.moveRight = true;
+        }
+        else if (data.inputId === 'up'){
+            if(player.moveRight || player.moveLeft || player.moveDown) return;
+            player.moveUp = true;
+        }
+        else if (data.inputId === 'down'){
+            if(player.moveRight || player.moveUp || player.moveLeft) return;
+            player.moveDown = true;
+        }
     });
 
     client.on('disconnect', () => {

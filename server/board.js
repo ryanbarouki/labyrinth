@@ -113,11 +113,11 @@ class Board {
 
         let numPlayers = Object.keys(this.playerList).length;
         const cardsPerPlayer = 24 / numPlayers;
-        cards = shuffle(cards);
+        this.cards = shuffle(this.cards);
         let j = 0;
         for (let i in this.playerList){
             let player = this.playerList[i];
-            player.cards = cards.slice(j, j + cardsPerPlayer);
+            player.cards = this.cards.slice(j, j + cardsPerPlayer);
             j += cardsPerPlayer;
         }
     }
