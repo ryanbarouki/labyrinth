@@ -3,7 +3,7 @@ An online version of the popular board game Labyrinth
 
 # TODO
 ## Frontend
-- Rotate spare tile on click
+- add in the treasures to reach 
 
 ## General
 - add a screen for when the server disconnects
