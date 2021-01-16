@@ -2,6 +2,7 @@ const Tile = require('./tile.js');
 const {shuffle} = require('./utils.js');
 const Card = require("./card.js");
 const { TILE_SIZE, BOARD_SIZE, OFFSET } = require("./constants.js");
+const Treasure = require('./treasure.js');
 
 class Board {
     constructor() {
@@ -17,7 +18,15 @@ class Board {
                     new Card(15), new Card(16), new Card(18), new Card(20), new Card(22), new Card(23),
                     new Card(27), new Card(28), new Card(30), new Card(31), new Card(32), new Card(34),
                     new Card(36), new Card(41), new Card(43), new Card(44), new Card(46), new Card(49)];
-        this.board = board
+        const treasures = [[new Treasure(0), new Treasure(1), new Treasure(2), new Treasure(3), new Treasure(4), new Treasure(5), new Treasure(6)], 
+                           [new Treasure(7), new Treasure(8), new Treasure(9), new Treasure(10), new Treasure(11), new Treasure(12), new Treasure(13)],
+                           [new Treasure(14), new Treasure(15), new Treasure(16), new Treasure(17), new Treasure(18), new Treasure(19), new Treasure(20)],
+                           [new Treasure(21), new Treasure(22), new Treasure(23), null, null, null, null],
+                           [null, null, null, null, null, null, null],
+                           [null, null, null, null, null, null, null],
+                           [null, null, null, null, null, null, null]];
+        this.board = board;
+        this.treasures = treasures;
         this.cards = cards;
         this.sparePiece = sparePiece;
         this.sparePiecePreviousPos =  [-1,-1];
@@ -33,6 +42,7 @@ class Board {
         this.slideRowLeft =  {1:false, 3:false, 5:false};
         this.rotate = false;
         this.board = this.InitialiseBoard();
+        this.treasures = this.InitialiseTreasures();
     }
 
     Score(id) {
@@ -95,6 +105,15 @@ class Board {
         while(flatBoard.length) newBoard.push(flatBoard.splice(0,7));
         this.InitialiseTileXY(newBoard);
         return newBoard;
+    }
+
+    InitialiseTreasures() {
+       let flattenedTreasures  = [].concat(...this.treasures);
+       flattenedTreasures = shuffle(flattenedTreasures); 
+
+       const newBoard = [];
+       while(flattenedTreasures.length) newBoard.push(flattenedTreasures.splice(0,7));
+       return newBoard;
     }
 
     InitialiseTileXY(board) {

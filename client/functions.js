@@ -47,12 +47,25 @@ function drawBoard() {
     drawArrows();
     UpdateEndTurnBtn();
     drawPlayers();
+    drawTreasures();
 }
 
 function drawPlayers() {
     for (let i in players) {
         let player = players[i];
         ctx.drawImage(playerSprites[player.playerNumber], player.frameX, player.frameY, player.width, player.height, player.xCanvas, player.yCanvas, player.width, player.height);
+    }
+}
+
+function drawTreasures() {
+    for (let i = 0; i < treasures.length; i++) {
+        for (let j = 0; j < treasures.length; j++) {
+            const treasure = treasures[i][j];
+            if (treasure == null) continue;
+            const x = j * TILE_SIZE + OFFSET + TREASURE_OFFSET;
+            const y = i * TILE_SIZE + OFFSET + TREASURE_OFFSET;
+            ctx.drawImage(treasureSprites[treasure.id], x, y);
+        }
     }
 }
 

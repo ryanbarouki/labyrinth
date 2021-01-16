@@ -8,6 +8,7 @@ let startGame = true;
 let cards = [];
 let playerTurn = "";
 let playerId = "";
+let treasures = [];
 const BOARD_SIZE = 800;
 const TILE_SIZE = BOARD_SIZE/10;
 const OFFSET = (BOARD_SIZE - 7 * TILE_SIZE) / 2;
@@ -15,30 +16,9 @@ const PLAYER_WIDTH = 128/4;
 const PLAYER_HEIGHT = 192/4;
 const PLAYER_OFFSET_X = (TILE_SIZE - PLAYER_WIDTH) / 2;
 const PLAYER_OFFSET_Y = (TILE_SIZE - PLAYER_HEIGHT) / 2;
-
-const cornerSprite = new Image();
-cornerSprite.src = './client/img/Corner.png'
-const straightSprite = new Image();
-straightSprite.src = './client/img/Straight.png'
-const Tsprite = new Image();
-Tsprite.src = './client/img/Tpiece.png'
-const brownWizardSprite = new Image();
-const redWizardSprite = new Image();
-const blueWizardSprite = new Image();
-const greenWizardSprite = new Image();
-brownWizardSprite.src = './client/img/brownwizard.png';
-redWizardSprite.src = './client/img/redwizard.png';
-blueWizardSprite.src = './client/img/bluewizard.png';
-greenWizardSprite.src = './client/img/greenwizard.png';
-
-const tileSprites = {0:cornerSprite,
-                     1:straightSprite,
-                     2:Tsprite}
-
-const playerSprites = {1: redWizardSprite,
-                       2: blueWizardSprite,
-                       3: greenWizardSprite,
-                       4: brownWizardSprite}
+const TREASURE_SIZE = 32;
+const TREASURE_OFFSET = (TILE_SIZE - TREASURE_SIZE) /2;
+const arrows = [];
 
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
@@ -53,7 +33,6 @@ const startGameBtn = document.getElementById('startGameBtn');
 const lobbyScreen = document.getElementById('lobby');
 const lobbyPlayers = document.getElementById('lobbyPlayers');
 const endGameScreen = document.getElementById('endGameScreen')
-const arrows = [];
 
 // ==================================== EVENT LISTENERS =======================================
 newGameBtn.addEventListener('click', () => {
@@ -139,6 +118,7 @@ socket.on('gameState', package => {
         package = JSON.parse(package);
         players = package.boardPack.playerList;
         board = package.boardPack.board;
+        treasures = package.boardPack.treasures;
         sparePiece = package.boardPack.sparePiece;
         sparePiece.sprite = new TileSprite(sparePiece.x, sparePiece.y, sparePiece.type);
         playerTurn = package.boardPack.playerTurn;
