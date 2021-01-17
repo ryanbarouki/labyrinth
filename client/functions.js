@@ -46,8 +46,8 @@ function drawBoard() {
     tile.draw(ctx, tileSprites[sparePiece.type], sparePiece.rotation);
     drawArrows();
     UpdateEndTurnBtn();
-    drawPlayers();
     drawTreasures();
+    drawPlayers();
 }
 
 function drawPlayers() {

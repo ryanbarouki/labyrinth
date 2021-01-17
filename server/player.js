@@ -22,33 +22,5 @@ class Player {
         this.moveDown = false;
         this.moveUp = false;
     }
-
-    MoveRight() {
-        if(this.x < 6){
-            if (this.amountMoved > TILE_SIZE) {
-                this.amountMoved = 0;
-                this.x++;
-                return;
-            }
-            this.xCanvas += PLAYER_SPEED;
-            this.amountMoved += PLAYER_SPEED;
-        }
-    }
-    
-    MoveLeft() {
-        if(this.x > 0)
-            this.x--;
-    }
-    
-    MoveUp() {
-        if(this.y > 0)
-            this.y--;
-    }
-
-    MoveDown() {
-        if(this.y < 6)
-            this.y++;
-    }
-
 }
 module.exports = Player;
