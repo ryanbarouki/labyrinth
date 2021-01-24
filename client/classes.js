@@ -25,6 +25,7 @@ class Triangle {
         this.x = x;
         this.y = y;
         this.posVec = new Vec2d(x,y);
+        this.colour = "rgb(255, 245, 104)";
     }
     
     rotate(ang) {
@@ -32,12 +33,12 @@ class Triangle {
         this.vec2 = this.vec2.rotate(ang);
     }
 
-    draw(ctx, colour) {
+    draw(ctx) {
         ctx.beginPath();
         ctx.moveTo(this.x, this.y);
         ctx.lineTo(this.x + this.vec1.x, this.y + this.vec1.y);
         ctx.lineTo(this.x + this.vec2.x, this.y + this.vec2.y);
-        ctx.fillStyle = colour;
+        ctx.fillStyle = this.colour;
         ctx.fill();
     }
 }

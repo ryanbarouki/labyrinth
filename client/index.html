@@ -13,7 +13,7 @@
         <div id="initialScreen" class="h-100">
             <div class="d-flex flex-column align-items-center justify-content-center h-100">
                 <h1>
-                    <img id="logo" src="./client/img/Labyrinth_Main_Logo.png" alt="">
+                    <img id="logo" src="./client/img/TreasureTrailsLogo.png" alt="">
                 </h1>
                 <div class="form-group">
                     <input type="text" placeholder="Enter Your Name*" id="nameInput"/>
@@ -43,7 +43,7 @@
         <div id="lobby" class="h-100">
             <div class="d-flex flex-column align-items-center justify-content-center h-100">
                 <h1>
-                    <img id="logo" src="./client/img/Labyrinth_Main_Logo.png" alt="">
+                    <img id="logo" src="./client/img/TreasureTrailsLogo.png" alt="">
                 </h1>
                 <h3>Your game code is: <span id="gameCodeDisplay"></span></h3>
                 <div class="d-flex flex-column align-items-center justify-content-center h-100" id="lobbyPlayers">
@@ -62,7 +62,7 @@
         <div id="endGameScreen" class="h-100">
             <div class="d-flex flex-column align-items-center justify-content-center h-100">
                 <h1>
-                    <img id="logo" src="./client/img/Labyrinth_Main_Logo.png" alt="">
+                    <img id="logo" src="./client/img/TreasureTrailsLogo.png" alt="">
                 </h1>
                 <h3><span id="winnerDisplay"></span></h3>
           </div>
@@ -70,6 +70,9 @@
     </div>
 
     <div class="container align-items-center justify-content-center" id="gameScreen">
+      <div class="container d-flex align-items-center justify-content-center">
+        <img id="logoGameScreen" src="./client/img/TreasureTrailsLogo.png" alt="">
+      </div>
       <div class="row">
       <div class="col-8">
         <canvas id="gameCanvas" width="1000" height="800"></canvas>
@@ -107,7 +110,7 @@
     <script src="/client/index_client_canvas.js"></script>
     </body>
 
-    <footer class="fixed-bottom  container">
+    <footer class="fixed-bottom container">
       <p>Character artwork by <a href="http://untamed.wild-refuge.net/rpgxp.php">Sithjester</a></p>
     </footer>
     </html>

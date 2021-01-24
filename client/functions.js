@@ -23,12 +23,12 @@ function initialiseArrows() {
 
 function drawArrows() {
     for (let arrow of arrows) {
-        arrow.draw(ctx, "rgb(255, 245, 104)");
+        arrow.draw(ctx);
     }
 }
 
 function drawBoard() {
-    ctx.fillStyle = "rgb(0, 50, 90)";
+    ctx.fillStyle = "#7a7b80";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     let x,y;
     for (let i = 0; i < board.length; i++) {

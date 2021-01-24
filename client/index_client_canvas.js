@@ -52,6 +52,7 @@ canvas.addEventListener('click', event => {
     const y = event.clientY - rect.top;
     for (let arrow of arrows){
         if(arrow.clicked(x, y)){
+            console.log('clicked')
             socket.emit(arrow.action[0], arrow.action[1]);
             // shift row/col of board
         }
@@ -60,6 +61,20 @@ canvas.addEventListener('click', event => {
         socket.emit('rotate');
     }
 });
+
+canvas.addEventListener('mousemove', event => {
+    const rect = canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    for (let arrow of arrows){
+        if(arrow.clicked(x, y)){
+            arrow.colour = "#333333";
+        }
+        else {
+            arrow.colour = "rgb(255, 245, 104)"; 
+        }
+    } 
+})
 
 endTurnBtn.addEventListener('click', () => {
     socket.emit('endTurn', gameCode);
