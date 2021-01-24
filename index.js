@@ -37,10 +37,10 @@ io.sockets.on('connection', client => {
         const result = gameRooms[roomName].Score(client.id);
         const player = gameRooms[roomName].playerList[client.id]
         gameRooms[roomName].boardShifted = false; // to allow board to move on next turn
-        // if (result == 1) {
-        //     io.sockets.in(roomName).emit('endGame', JSON.stringify({player}));
-        //     clearInterval(intervalID); //stop game sending data to clients
-        // }
+        if (result == 1) {
+            io.sockets.in(roomName).emit('endGame', JSON.stringify({player}));
+            clearInterval(intervalID); //stop game sending data to clients
+        }
 
     }
     

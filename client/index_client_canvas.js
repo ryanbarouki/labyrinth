@@ -34,6 +34,7 @@ const lobbyScreen = document.getElementById('lobby');
 const lobbyPlayers = document.getElementById('lobbyPlayers');
 const endGameScreen = document.getElementById('endGameScreen');
 const scoreBoard = document.getElementById('scoreBoard');
+const winnerDisplay = document.getElementById('winnerDisplay');
 
 // ==================================== EVENT LISTENERS =======================================
 newGameBtn.addEventListener('click', () => {
@@ -141,3 +142,11 @@ socket.on('playerCards', package => {
     playerId = package.id;
     //console.log(cards[0].id);
 });
+
+socket.on('endGame', (package) => {
+    package = JSON.parse(package);
+    let winner = package.player;
+    gameScreen.style.display = "none";
+    endGameScreen.style.display = "block";
+    winnerDisplay.innerText = `${winner.playerName} wins!`
+})

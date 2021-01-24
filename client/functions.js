@@ -44,13 +44,9 @@ function drawBoard() {
             if (!treasure) continue;
             ctx.drawImage(treasureSprites[treasure.id], treasure.x, treasure.y);
         }
-    UpdateScoreBoard();
-}
-    const tile = new TileSprite(sparePiece.x, sparePiece.y, sparePiece.type);
-    tile.draw(ctx, tileSprites[sparePiece.type], sparePiece.rotation);
-    if (sparePiece.treasure != null) {
-        ctx.drawImage(treasureSprites[sparePiece.treasure.id], sparePiece.treasure.x, sparePiece.treasure.y);
     }
+    UpdateScoreBoard();
+    drawSparePiece(ctx);
     drawArrows();
     UpdateEndTurnBtn();
     drawPlayers();
@@ -61,6 +57,30 @@ function drawPlayers() {
         let player = players[i];
         ctx.drawImage(playerSprites[player.playerNumber], player.frameX, player.frameY, player.width, player.height, player.xCanvas, player.yCanvas, player.width, player.height);
     }
+}
+
+function drawSparePiece(ctx){
+    const tile = new TileSprite(sparePiece.x, sparePiece.y, sparePiece.type);
+    tile.draw(ctx, tileSprites[sparePiece.type], sparePiece.rotation);
+    if (sparePiece.treasure != null) {
+        ctx.drawImage(treasureSprites[sparePiece.treasure.id], sparePiece.treasure.x, sparePiece.treasure.y);
+    }
+    // drawRoundedRect(ctx, sparePiece.x, sparePiece.y, 100, 100, 10);
+}
+
+function drawRoundedRect(ctx, x, y, width, height, radius) {
+    ctx.beginPath();
+    ctx.moveTo(x + radius, y);
+    ctx.lineTo(x + width - radius, y);
+    ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+    ctx.lineTo(x + width, y + height - radius);
+    ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+    ctx.lineTo(x + radius, y + height);
+    ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+    ctx.lineTo(x, y + radius);
+    ctx.quadraticCurveTo(x, y, x + radius, y);
+    ctx.closePath();
+    ctx.stroke();
 }
 
 function joinGame() {
