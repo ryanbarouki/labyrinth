@@ -1,4 +1,4 @@
-const { TILE_SIZE, BOARD_SPEED, ROTATE_SPEED, PLAYER_SPEED, PLAYER_WIDTH, PLAYER_HEIGHT } = require("./constants.js");
+const { TILE_SIZE, BOARD_SPEED, ROTATE_SPEED, PLAYER_SPEED, PLAYER_WIDTH, PLAYER_HEIGHT, PLAYER_OFFSET_X, PLAYER_OFFSET_Y, OFFSET } = require("./constants.js");
 const Player = require("./player.js");
 
 function GameLoop(gameBoard) {
@@ -17,6 +17,18 @@ function GameLoop(gameBoard) {
         for (let i = 0; i < board.length; i++) {
             let tile = board[i][col];
             tile.y += BOARD_SPEED;
+            if (!tile.treasure) continue;
+            tile.setTreasurePosition();
+        }
+        // slide the player along
+        for (let i in gameBoard.playerList) {
+           let player = gameBoard.playerList[i];
+           if (player.x == col) {
+                if (player.yCanvas >= OFFSET + 6 * TILE_SIZE + PLAYER_OFFSET_Y){
+                   player.yCanvas = OFFSET - TILE_SIZE + PLAYER_OFFSET_Y;
+                }
+               player.yCanvas += BOARD_SPEED;
+           }
         }
     }
 
@@ -31,6 +43,18 @@ function GameLoop(gameBoard) {
         for (let i = 0; i < board.length; i++) {
             let tile = board[i][col];
             tile.y -= BOARD_SPEED;
+            if (!tile.treasure) continue;
+            tile.setTreasurePosition()
+        }
+        // slide the player along
+        for (let i in gameBoard.playerList) {
+           let player = gameBoard.playerList[i];
+           if (player.x == col) {
+                if (player.yCanvas <= OFFSET + PLAYER_OFFSET_Y){
+                   player.yCanvas = OFFSET + 7 * TILE_SIZE + PLAYER_OFFSET_Y;
+                }
+                player.yCanvas -= BOARD_SPEED;
+           }
         }
     
     }
@@ -45,6 +69,18 @@ function GameLoop(gameBoard) {
         for (let i = 0; i < board.length; i++) {
             let tile = board[row][i];
             tile.x += BOARD_SPEED;
+            if (!tile.treasure) continue;
+            tile.setTreasurePosition()
+        }
+        // slide the player along
+        for (let i in gameBoard.playerList) {
+           let player = gameBoard.playerList[i];
+           if (player.y == row) {
+               if (player.xCanvas >= OFFSET + 6 * TILE_SIZE + PLAYER_OFFSET_X){
+                   player.xCanvas = OFFSET - TILE_SIZE + PLAYER_OFFSET_X;
+                }
+               player.xCanvas += BOARD_SPEED;
+           }
         }
     }
     
@@ -59,6 +95,18 @@ function GameLoop(gameBoard) {
         for (let i = 0; i < board.length; i++) {
             let tile = board[row][i];
             tile.x -= BOARD_SPEED;
+            if (!tile.treasure) continue;
+            tile.setTreasurePosition()
+        }
+        // slide the player along
+        for (let i in gameBoard.playerList) {
+           let player = gameBoard.playerList[i];
+           if (player.y == row) {
+               if (player.xCanvas <= OFFSET + PLAYER_OFFSET_X){
+                   player.xCanvas = OFFSET + 7 * TILE_SIZE + PLAYER_OFFSET_X;
+                }
+               player.xCanvas -= BOARD_SPEED;
+           }
         }
     }
 
@@ -95,6 +143,7 @@ function GameLoop(gameBoard) {
     function moveLeft() {
         const id = gameBoard.playerTurn;
         let player = gameBoard.playerList[id];
+        if (!player) return;
         if (!player.moveLeft) return;
         if (player.amountMoved >= TILE_SIZE) {
             player.x--; // update the discrete board position at the end of the move

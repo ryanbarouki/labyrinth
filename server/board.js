@@ -1,32 +1,26 @@
 const Tile = require('./tile.js');
 const {shuffle} = require('./utils.js');
 const Card = require("./card.js");
-const { TILE_SIZE, BOARD_SIZE, OFFSET } = require("./constants.js");
+const { TILE_SIZE, BOARD_SIZE, OFFSET, treasure } = require("./constants.js");
 const Treasure = require('./treasure.js');
 
 class Board {
+    // 0: Corner, 1: Straight, 2: T shape - Tile Types
     constructor() {
-        const board = [[new Tile(0, 0, 1), new Tile(1, 0), new Tile(2, 2), new Tile(3, 1), new Tile(4, 2), new Tile(5, 0), new Tile(6,0, 2)],
-        [new Tile(7, 2), new Tile(8, 1), new Tile(9, 1), new Tile(10,1), new Tile(11,1), new Tile(12, 2), new Tile(13,1)],
-        [new Tile(14, 2), new Tile(15, 2), new Tile(16, 2), new Tile(17, 0), new Tile(18,2), new Tile(19,0), new Tile(20, 2)],
-        [new Tile(21, 0), new Tile(22,2), new Tile(23,0), new Tile(24,0), new Tile(25,1), new Tile(26,0), new Tile(27,2)],
-        [new Tile(28,2), new Tile(29,1), new Tile(30,2), new Tile(31,0), new Tile(32,2), new Tile(33,1), new Tile(34,2)],
-        [new Tile(35,1), new Tile(36,0), new Tile(37,1), new Tile(38,0), new Tile(39,0), new Tile(40,1), new Tile(41,2)],
-        [new Tile(42,0, 0), new Tile(43,0), new Tile(44,2), new Tile(45,1), new Tile(46,2), new Tile(47,0), new Tile(48,0,3)]]
-        const sparePiece = new Tile(49,0);
-        const cards = [new Card(1), new Card(2), new Card(4), new Card(7), new Card(12), new Card(14),
-                    new Card(15), new Card(16), new Card(18), new Card(20), new Card(22), new Card(23),
-                    new Card(27), new Card(28), new Card(30), new Card(31), new Card(32), new Card(34),
-                    new Card(36), new Card(41), new Card(43), new Card(44), new Card(46), new Card(49)];
-        const treasures = [[new Treasure(0), new Treasure(1), new Treasure(2), new Treasure(3), new Treasure(4), new Treasure(5), new Treasure(6)], 
-                           [new Treasure(7), new Treasure(8), new Treasure(9), new Treasure(10), new Treasure(11), new Treasure(12), new Treasure(13)],
-                           [new Treasure(14), new Treasure(15), new Treasure(16), new Treasure(17), new Treasure(18), new Treasure(19), new Treasure(20)],
-                           [new Treasure(21), new Treasure(22), new Treasure(23), null, null, null, null],
-                           [null, null, null, null, null, null, null],
-                           [null, null, null, null, null, null, null],
-                           [null, null, null, null, null, null, null]];
+        const board = [[new Tile(0, null, 1), new Tile(0, treasure.bag), new Tile(2, treasure.pearl), new Tile(1, null), new Tile(2, treasure.blueStone), new Tile(0, null), new Tile(2, null, 2)],
+        [new Tile(2, treasure.chest1), new Tile(1, null), new Tile(1, null), new Tile(1, null), new Tile(1, null), new Tile(2, treasure.chest2), new Tile(1, null)],
+        [new Tile(2, treasure.chest3), new Tile(2, treasure.vessel), new Tile(2, treasure.chest4), new Tile(0, null), new Tile(2, treasure.chest5), new Tile(0, null), new Tile(2, treasure.crown1)],
+        [new Tile(0, null), new Tile(2, treasure.crown2), new Tile(0, treasure.diamond), new Tile(0, null), new Tile(1, null), new Tile(0, null), new Tile(2, treasure.emerald)],
+        [new Tile(2, treasure.gold), new Tile(1, null), new Tile(2, treasure.jewellery), new Tile(0, treasure.key), new Tile(2, treasure.violetStone), new Tile(1, null), new Tile(2, treasure.pinkStone)],
+        [new Tile(1, null), new Tile(0, treasure.ring1), new Tile(1, null), new Tile(0, null), new Tile(0, null), new Tile(1, null), new Tile(2, treasure.ring2)],
+        [new Tile(0, null, 0), new Tile(0, treasure.ruby), new Tile(2, treasure.scepter), new Tile(1, null), new Tile(2, treasure.scroll), new Tile(0, treasure.scull), new Tile(0, null, 3)]];
+        const sparePiece = new Tile(0);
+        const cards = [new Card(0), new Card(1), new Card(2), new Card(3), new Card(4), new Card(5),
+                    new Card(6), new Card(7), new Card(8), new Card(9), new Card(10), new Card(11),
+                    new Card(12), new Card(13), new Card(14), new Card(15), new Card(16), new Card(17),
+                    new Card(18), new Card(19), new Card(20), new Card(21), new Card(22), new Card(23)];
+
         this.board = board;
-        this.treasures = treasures;
         this.cards = cards;
         this.sparePiece = sparePiece;
         this.sparePiecePreviousPos =  [-1,-1];
@@ -42,7 +36,6 @@ class Board {
         this.slideRowLeft =  {1:false, 3:false, 5:false};
         this.rotate = false;
         this.board = this.InitialiseBoard();
-        this.treasures = this.InitialiseTreasures();
     }
 
     Score(id) {
@@ -52,7 +45,8 @@ class Board {
         let cards = player.cards;
         const card = cards[0];
         const tile = this.board[y][x];
-        if (tile.id == card.id) {
+        if (tile.treasure == null) return;
+        if (tile.treasure.id == card.id) {
             if(cards.length > 0){
                 cards.splice(0,1);
             }
@@ -84,12 +78,12 @@ class Board {
         let flatBoard = [].concat(...this.board);
         flatBoard.push(this.sparePiece); // add the spare tile to be shuffled
 
-        const fixed = {0:new Tile(0,0, 1),
-                       6:new Tile(6,0, 2),
-                       42:new Tile(42,0, 0),
-                       48:new Tile(48,0, 3)};
+        const fixed = {0:new Tile(0, null, 1),
+                       6:new Tile(0, null, 2),
+                       42:new Tile(0, null, 0),
+                       48:new Tile(0, null, 3)};
 
-        flatBoard = flatBoard.filter(tile => {return !(Object.keys(fixed).includes(String(tile.id)))});
+        flatBoard = flatBoard.filter(tile => {return !tile.isFixed});
         flatBoard = shuffle(flatBoard);
 
         // add fixed tiles back in
@@ -107,25 +101,21 @@ class Board {
         return newBoard;
     }
 
-    InitialiseTreasures() {
-       let flattenedTreasures  = [].concat(...this.treasures);
-       flattenedTreasures = shuffle(flattenedTreasures); 
-
-       const newBoard = [];
-       while(flattenedTreasures.length) newBoard.push(flattenedTreasures.splice(0,7));
-       return newBoard;
-    }
-
     InitialiseTileXY(board) {
         for(let i = 0; i < board.length; i++) {
             for(let j = 0; j < board.length; j++) {
-                board[i][j].x = j * TILE_SIZE + OFFSET;
-                board[i][j].y = i * TILE_SIZE + OFFSET;
+                const tile = board[i][j];
+                const x = j * TILE_SIZE + OFFSET;
+                const y = i * TILE_SIZE + OFFSET;
+                tile.x = x;
+                tile.y = y;
+                tile.setTreasurePosition();
             }
         }
         // spare piece position
         this.sparePiece.x = OFFSET + 9 * TILE_SIZE;
         this.sparePiece.y = OFFSET;
+        this.sparePiece.setTreasurePosition();
     }
 
     DealCards() {
@@ -145,6 +135,7 @@ class Board {
     SetSparePiecePosition() {
         this.sparePiece.x = OFFSET + 9 * TILE_SIZE;
         this.sparePiece.y = OFFSET;
+        this.sparePiece.setTreasurePosition();
     }
     ShiftColDown(col) {
         if (this.boardShifted) return;  
@@ -159,7 +150,7 @@ class Board {
             this.board[i][col] = this.board[i-1][col];
         }
         this.board[0][col] = sparePieceTemp; // set first piece to original spare piece
-        // move pieces if they are on the col
+        // move players if they are on the col
         for (let i in this.playerList) {
             let player = this.playerList[i];
             if (player.x == col) {
@@ -185,7 +176,7 @@ class Board {
             this.board[i][col] = this.board[i+1][col];
         }
         this.board[this.board.length - 1][col] = sparePieceTemp; // set first piece to original spare piece
-        // move pieces if they are on the col
+        // move players if they are on the col
         for (let i in this.playerList) {
             let player = this.playerList[i];
             if (player.x == col) {
@@ -211,7 +202,7 @@ class Board {
             this.board[row][i] = this.board[row][i-1];
         }
         this.board[row][0] = sparePieceTemp; // set first piece to original spare piece
-        // move pieces if they are on the row
+        // move players if they are on the row
         for (let i in this.playerList) {
             let player = this.playerList[i];
             if (player.y == row) {
@@ -238,7 +229,7 @@ class Board {
             this.board[row][i] = this.board[row][i+1];
         }
         this.board[row][this.board.length - 1] = sparePieceTemp; // set first piece to original spare piece
-        // move pieces if they are on the row
+        // move players if they are on the row
         for (let i in this.playerList) {
             let player = this.playerList[i];
             if (player.y == row) {

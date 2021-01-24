@@ -40,13 +40,19 @@ function drawBoard() {
             const tile = new TileSprite(x, y, type);
             const sprite = tileSprites[type];
             tile.draw(ctx, sprite, ang)
+            const treasure = board[i][j].treasure;
+            if (!treasure) continue;
+            ctx.drawImage(treasureSprites[treasure.id], treasure.x, treasure.y);
         }
-    }
+    UpdateScoreBoard();
+}
     const tile = new TileSprite(sparePiece.x, sparePiece.y, sparePiece.type);
     tile.draw(ctx, tileSprites[sparePiece.type], sparePiece.rotation);
+    if (sparePiece.treasure != null) {
+        ctx.drawImage(treasureSprites[sparePiece.treasure.id], sparePiece.treasure.x, sparePiece.treasure.y);
+    }
     drawArrows();
     UpdateEndTurnBtn();
-    drawTreasures();
     drawPlayers();
 }
 
@@ -54,18 +60,6 @@ function drawPlayers() {
     for (let i in players) {
         let player = players[i];
         ctx.drawImage(playerSprites[player.playerNumber], player.frameX, player.frameY, player.width, player.height, player.xCanvas, player.yCanvas, player.width, player.height);
-    }
-}
-
-function drawTreasures() {
-    for (let i = 0; i < treasures.length; i++) {
-        for (let j = 0; j < treasures.length; j++) {
-            const treasure = treasures[i][j];
-            if (treasure == null) continue;
-            const x = j * TILE_SIZE + OFFSET + TREASURE_OFFSET;
-            const y = i * TILE_SIZE + OFFSET + TREASURE_OFFSET;
-            ctx.drawImage(treasureSprites[treasure.id], x, y);
-        }
     }
 }
 
@@ -117,7 +111,7 @@ function UpdateScoreBoard() {
                                     <th scope="row">${label}</th>
                                     <td>${player.playerName}</td>
                                     <td>${player.score}</td>
-                                    <td><div class="notfixed-tiles targetCard" id=f${targetCardId}></div></td>
+                                    <td><div class="targetCard" id=f${targetCardId}></div></td>
                                 </tr>`
     }
 }

@@ -69,35 +69,36 @@
         </div>
     </div>
 
-    <div class="container" id="gameScreen">
+    <div class="container align-items-center justify-content-center" id="gameScreen">
+      <div class="row">
+      <div class="col-8">
         <canvas id="gameCanvas" width="1000" height="800"></canvas>
-        <div>
+      </div>
+        <!-- <div>
             <button type="submit"
         class="btn btn-info" id="endTurnBtn">End Turn</button>
+        </div> -->
+        <div class="col-4" id="scoreArea">
+            <div class="align-items-center justify-content-center h-100">
+                    <table class="table">
+                        <thead>
+                          <tr>
+                            <th scope="col">Turn</th>
+                            <th scope="col">Player</th>
+                            <th scope="col">Score</th>
+                            <th scope="col">Target Treasure</th>
+                          </tr>
+                        </thead>
+                        <tbody id="scoreBoard">
+                        </tbody>
+                      </table>
+                     <button type="submit"
+                class="btn btn-info" id="endTurnBtn">End Turn</button>
+            </div>
+        </div>
         </div>
     </div>
 
-<!-- <div class="col-4">
-        <div class="d-flex flex-column align-items-center justify-content-center h-100">
-            <div>
-            <table class="table">
-                <thead>
-                  <tr>
-                    <th scope="col">Turn</th>
-                    <th scope="col">Player</th>
-                    <th scope="col">Score</th>
-                    <th scope="col">Target Tile</th>
-                  </tr>
-                </thead>
-                <tbody id="scoreBoard">
-                </tbody>
-              </table>
-              </div>
-        <div>
-            <button type="submit"
-        class="btn btn-info" id="endTurnBtn">End Turn</button>
-        </div>
-    </div> -->
 
     <script src="https://cdn.jsdelivr.net/npm/socket.io-client@3.0.1/dist/socket.io.min.js"></script>
     <script src="/client/sprites.js"></script>

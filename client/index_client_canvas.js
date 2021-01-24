@@ -32,7 +32,8 @@ const gameCodeDisplay = document.getElementById('gameCodeDisplay');
 const startGameBtn = document.getElementById('startGameBtn');
 const lobbyScreen = document.getElementById('lobby');
 const lobbyPlayers = document.getElementById('lobbyPlayers');
-const endGameScreen = document.getElementById('endGameScreen')
+const endGameScreen = document.getElementById('endGameScreen');
+const scoreBoard = document.getElementById('scoreBoard');
 
 // ==================================== EVENT LISTENERS =======================================
 newGameBtn.addEventListener('click', () => {

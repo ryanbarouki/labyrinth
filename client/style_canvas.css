@@ -1,3 +1,7 @@
+* {
+    color: white;
+}
+
 body {
     background-color: rgb(0, 50, 90);
 }
@@ -8,6 +12,26 @@ p {
 
 h3 {
     color: white;
+}
+
+table {
+    color:white;
+}
+
+.targetCard {
+    margin-bottom: 1rem;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    z-index: 100;
+    font-size: 50px;
+    width: 32px;
+    height: 32px;
+    border-radius: 10%;
+}
+
+#scoreArea {
+    margin-top: 300px;
 }
 
 #logo {
@@ -52,4 +76,77 @@ h3 {
     background-image: url("./img/brownwizard.png");
     width: 32px;
     height: 48px;
+}
+
+#f0 {
+    background-image: url('./img/Treasures/background/bag.png');
+}
+#f1 {
+    background-image: url('./img/Treasures/background/black_pearl.png');
+}
+#f2 {
+    background-image: url('./img/Treasures/background/blue_stone.png');
+}
+#f3 {
+    background-image: url('./img/Treasures/background/Chest1.png');
+}
+#f4 {
+    background-image: url('./img/Treasures/background/Chest2.png');
+}
+#f5 {
+    background-image: url('./img/Treasures/background/Chest3.png');
+}
+#f6 {
+    background-image: url('./img/Treasures/background/Chest4.png');
+}
+#f7 {
+    background-image: url('./img/Treasures/background/Chest5.png');
+}
+#f8 {
+    background-image: url('./img/Treasures/background/crown1.png');
+}
+#f9 {
+    background-image: url('./img/Treasures/background/crown2.png');
+}
+#f10 {
+    background-image: url('./img/Treasures/background/diamond.png');
+}
+#f11 {
+    background-image: url('./img/Treasures/background/emerald.png');
+}
+#f12 {
+    background-image: url('./img/Treasures/background/gold.png');
+}
+#f13 {
+    background-image: url('./img/Treasures/background/jewellery.png');
+}
+#f14 {
+    background-image: url('./img/Treasures/background/key.png');
+}
+#f15 {
+    background-image: url('./img/Treasures/background/pink_stone.png');
+}
+#f16 {
+    background-image: url('./img/Treasures/background/ring1.png');
+}
+#f17 {
+    background-image: url('./img/Treasures/background/ring2.png');
+}
+#f18 {
+    background-image: url('./img/Treasures/background/ruby.png');
+}
+#f19 {
+    background-image: url('./img/Treasures/background/scepter.png');
+}
+#f20 {
+    background-image: url('./img/Treasures/background/scroll.png');
+}
+#f21 {
+    background-image: url('./img/Treasures/background/scull.png');
+}
+#f22 {
+    background-image: url('./img/Treasures/background/vessel.png');
+}
+#f23 {
+    background-image: url('./img/Treasures/background/violet_stone.png');
 }

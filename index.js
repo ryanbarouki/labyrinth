@@ -34,8 +34,8 @@ io.sockets.on('connection', client => {
     function handleEndTurn(roomName) {
         if (!gameRooms[roomName]) return;
         gameRooms[roomName].NextTurn();
-        //const result = gameRooms[roomName].Score(client.id);
-        //const player = gameRooms[roomName].playerList[client.id]
+        const result = gameRooms[roomName].Score(client.id);
+        const player = gameRooms[roomName].playerList[client.id]
         gameRooms[roomName].boardShifted = false; // to allow board to move on next turn
         // if (result == 1) {
         //     io.sockets.in(roomName).emit('endGame', JSON.stringify({player}));
