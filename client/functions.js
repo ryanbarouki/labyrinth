@@ -41,8 +41,9 @@ function drawBoard() {
             const sprite = tileSprites[type];
             tile.draw(ctx, sprite, ang)
             const treasure = board[i][j].treasure;
-            if (!treasure) continue;
-            ctx.drawImage(treasureSprites[treasure.id], treasure.x, treasure.y);
+            if (treasure != null && treasure.visible) {
+                ctx.drawImage(treasureSprites[treasure.id], treasure.x, treasure.y);
+            }
         }
     }
     UpdateScoreBoard();

@@ -47,6 +47,7 @@ class Board {
         const tile = this.board[y][x];
         if (tile.treasure == null) return;
         if (tile.treasure.id == card.id) {
+            tile.treasure.visible = false;
             if(cards.length > 0){
                 cards.splice(0,1);
             }
