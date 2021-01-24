@@ -18,6 +18,10 @@ table {
     color:white;
 }
 
+input {
+    color: black;
+}
+
 .targetCard {
     margin-bottom: 1rem;
     margin-left: auto;

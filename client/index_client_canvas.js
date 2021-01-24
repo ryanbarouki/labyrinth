@@ -165,3 +165,16 @@ socket.on('endGame', (package) => {
     endGameScreen.style.display = "block";
     winnerDisplay.innerText = `${winner.playerName} wins!`
 })
+
+socket.on('unknownCode', () => {
+    alert("That code doesn't exist!");
+    startGame = false;
+})
+
+socket.on('gameFull', () => {
+    alert("There are already 4 players in this game :(");
+})
+
+socket.on('gameStarted', () => {
+    alert("This game is already in progress :(");
+})

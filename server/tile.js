@@ -5,7 +5,7 @@ class Tile {
     constructor(type, treasureId, rot = null) {
         this.type = type;
         this.isFixed = rot != null ? true : false; // it is fixed if I specify a rotation in constructor
-        this.rotation = rot ? rot * Math.PI / 2 : Math.floor(Math.random()*4) * Math.PI / 2;
+        this.rotation = rot != null ? rot * Math.PI / 2 : Math.floor(Math.random()*4) * Math.PI / 2;
         this.x = 0;
         this.y = 0;
         this.rotating = false;

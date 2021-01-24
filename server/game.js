@@ -124,6 +124,7 @@ function GameLoop(gameBoard) {
     function moveRight() {
         const id = gameBoard.playerTurn;
         let player = gameBoard.playerList[id];
+        if (!player) return;
         if (!player.moveRight) return;
         if (player.amountMoved >= TILE_SIZE) {
             player.x++; // update the discrete board position at the end of the move
@@ -164,6 +165,7 @@ function GameLoop(gameBoard) {
     function moveUp() {
         const id = gameBoard.playerTurn;
         let player = gameBoard.playerList[id];
+        if (!player) return;
         if (!player.moveUp) return;
         if (player.amountMoved >= TILE_SIZE) {
             player.y--; // update the discrete board position at the end of the move
@@ -183,6 +185,7 @@ function GameLoop(gameBoard) {
     function moveDown() {
         const id = gameBoard.playerTurn;
         let player = gameBoard.playerList[id];
+        if (!player) return;
         if (!player.moveDown) return;
         if (player.amountMoved >= TILE_SIZE) {
             player.y++; // update the discrete board position at the end of the move
