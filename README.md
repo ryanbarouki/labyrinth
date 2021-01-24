@@ -1,4 +1,4 @@
-# Labyrinth
+# Treasure Trails
 An online version of the popular board game Labyrinth
 
 # TODO
