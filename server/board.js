@@ -40,6 +40,7 @@ class Board {
 
     Score(id) {
         const player = this.playerList[id];
+        if (!player) return;
         const x = player.x;
         const y = player.y;
         let cards = player.cards;
